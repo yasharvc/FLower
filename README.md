@@ -19,8 +19,6 @@ this is the basic structure of a `Process`.
     - `Reject`: the result of object is reject.
     - `Complete`: the result of object is complete and flow can continue into next step.
   
-> [!NOTE]
 > Proces => StartStage => Intermediate stages => End Stage
 When we clone a process then we have following data copied:
-> [!IMPORTANT]
 > ProcessResult => StartStageResult => Intermediate stagesresults => End StageResult
