@@ -10,6 +10,8 @@ namespace Core.Services
 {
 	public class ProcessMaker : IProcessMaker
 	{
+		public ProcessResult Process { get; set; }
+
 		public Task AddStage(Stage whichStage, Stage stage)
 		{
 			throw new NotImplementedException();
@@ -26,6 +28,16 @@ namespace Core.Services
 		}
 
 		public Stage GetStartStage()
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task SetEnd(Stage stage)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task SetStart(Stage stage)
 		{
 			throw new NotImplementedException();
 		}
