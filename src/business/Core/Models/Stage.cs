@@ -8,6 +8,6 @@ namespace Core.Models
 		public string Name { get; set; }
 		public Stage Previous { get; set; }
 		public List<Stage> Next { get; set; }
-		public string UnqueID { get; set; }
+		public string UniqueID { get; set; }
 	}
 }
