@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Core.Models
 {
-	public class StageResult: Model, IName
+	public class StageResult: Model, IName, ITraceID
 	{
 		public string Name { get; set; }
 		public StageResult Previous { get; set; }

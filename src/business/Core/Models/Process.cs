@@ -2,7 +2,7 @@
 
 namespace Core.Models
 {
-	public class Process : Model, IName
+	public class Process : Model, IName, IUniqueID
 	{
 		public string Name { get; set; }
 		public Stage Start { get; set; }
