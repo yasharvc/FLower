@@ -20,5 +20,8 @@ this is the basic structure of a `Process`.
     - `Complete`: the result of object is complete and flow can continue into next step.
   
 > Proces => StartStage => Intermediate stages => End Stage
+> 
 When we clone a process then we have following data copied:
+
 > ProcessResult => StartStageResult => Intermediate stagesresults => End StageResult
+> 
