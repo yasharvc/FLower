@@ -2,7 +2,7 @@
 
 namespace Core.Interfaces.Repositories
 {
-	public interface ICRUDRepository<T> : ICUDRepository<T>, IQueryRepository where T : Model
+	public interface ICRUDRepository<T> : ICUDRepository<T>, IQueryRepository<T> where T : Model
 	{
 	}
 }

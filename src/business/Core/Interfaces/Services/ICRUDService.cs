@@ -9,7 +9,7 @@ namespace Core.Interfaces.Services
 		Task Create(T entity);
 		Task Update(T entity);
 		Task Delete(T entity);
-		Task<GenericQueryResult<Y>> Query<Y>(
+		Task<GenericQueryResult<T>> Query(
 			List<string> fieldsList,
 			Dictionary<string, bool> sort,
 			List<Comparison> conditions,

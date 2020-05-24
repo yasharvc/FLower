@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 
 namespace Core.Interfaces.Repositories
 {
-	public interface IQueryRepository
+	public interface IQueryRepository<T> where T: Model
 	{
-		Task<GenericQueryResult<T>> Query<T>(
+		Task<GenericQueryResult<T>> Query(
 			List<string> fieldsList,
 			Dictionary<string, bool> sort,
 			List<Comparison> conditions,
