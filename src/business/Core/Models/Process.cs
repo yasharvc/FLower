@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Core.Models
 {
-	public class Process : Model, IName, IUniqueID
+	public class Process : Model, IName, ITraceID
 	{
 		public string Name { get; set; }
 		public string UniqueID { get; set; }
@@ -19,5 +19,6 @@ namespace Core.Models
 		public List<DataHistory> DataHistories { get; set; }
 		public ManipulationPrivileges DataPrivileges { get; set; }
 		public StatusEnum Status { get; set; }
+		public string TraceID { get; set; }
 	}
 }
