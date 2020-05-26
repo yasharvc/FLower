@@ -20,5 +20,6 @@ namespace Core.Models
 		public ManipulationPrivileges DataPrivileges { get; set; }
 		public StatusEnum Status { get; set; }
 		public string TraceID { get; set; }
+		public List<StageHour> StageHours { get; set; }
 	}
 }
