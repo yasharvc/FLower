@@ -10,6 +10,7 @@ namespace Core.Models
 		public string Name { get; set; }
 		public FieldTypeEnum FieldType { get; set; }
 		public object Value { get; set; }
+		public IEnumerable<Field> SubFields { get; set; } = new List<Field>();
 		public IEnumerable<Field> Properties { get; set; } = new List<Field>();
 
 		protected T GetPropertyValue<T>(string name) => (T)Properties.Single(m => m.Name == name).Value;
