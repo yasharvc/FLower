@@ -17,7 +17,6 @@ namespace UnitTests.InMemoryRepositoryTests
 			var stage = new Stage
 			{
 				Name = "Test",
-				Previous = null,
 				Next = new List<Stage>(),
 				UniqueID = Guid.NewGuid().ToString()
 			};
