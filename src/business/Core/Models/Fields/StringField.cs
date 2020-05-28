@@ -1,17 +1,9 @@
 ﻿using Core.Enums;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Core.Models.Fields
 {
 	public class StringField : Field
 	{
-		public string Title
-		{
-			get => GetPropertyValue<string>(nameof(Title));
-			set => SetPropertyValue(nameof(Title), value, FieldTypeEnum.String);
-		}
-
 		public int Length
 		{
 			get => GetPropertyValue<int>(nameof(Length));
@@ -32,5 +24,8 @@ namespace Core.Models.Fields
 			Title = title;
 			Length = (int)length;
 		}
+
+		public override object Default() => "";
+		public override object Convert(object v) => System.Convert.ToString(v);
 	}
 }

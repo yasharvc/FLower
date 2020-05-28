@@ -24,8 +24,9 @@ namespace UnitTests.Field
 			var a = new Core.Models.Field();
 			a.FieldType = FieldTypeEnum.ArrayOfStructure;
 			a.Name = "UserInfo";
-			//var lst = a.Properties as List<Core.Models.Field>;
-			//lst.Add()
+			var lst = a.SubFields as List<Core.Models.Field>;
+			lst.Add(new StringField("username","User name"));
+			lst.Add(new StringField("password", "Password"));
 		}
 	}
 }
