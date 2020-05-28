@@ -19,6 +19,14 @@ namespace Core.Models
 			set => SetPropertyValue(nameof(Title), value, FieldTypeEnum.String);
 		}
 
+		public Field() { }
+
+		public Field(string name,string title)
+		{
+			Name = name;
+			Title = title;
+		}
+
 		protected T GetPropertyValue<T>(string name) => (T)Properties.Single(m => m.Name == name).Value;
 
 		protected void SetPropertyValue<T>(string name, T value, FieldTypeEnum fieldType)

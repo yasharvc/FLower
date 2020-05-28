@@ -18,10 +18,9 @@ namespace Core.Models.Fields
 		public IntegerField(string name, string title) : this(name, title, int.MinValue, int.MaxValue) { }
 		public IntegerField(string name, string title, int min) : this(name, title, min, int.MaxValue) { }
 		public IntegerField(string name, string title, int min, int max)
+			: base(name, title)
 		{
-			Name = name;
 			FieldType = FieldTypeEnum.Integer;
-			Title = title;
 			Min = min;
 			Max = max;
 		}

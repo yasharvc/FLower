@@ -13,9 +13,8 @@ namespace Core.Models.Fields
 		List<Dictionary<string, object>> Data => Value as List<Dictionary<string, object>>;
 
 		public ArrayOfStructureField(string name, string title, params Field[] structureFileds)
+			:base(name,title)
 		{
-			Name = name;
-			Title = title;
 			FieldType = FieldTypeEnum.ArrayOfStructure;
 			Value = new List<Dictionary<string, object>>();
 			SubFields = new List<Field>();

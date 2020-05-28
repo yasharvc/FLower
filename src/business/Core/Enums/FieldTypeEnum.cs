@@ -3,21 +3,25 @@
 	public enum FieldTypeEnum
 	{
 		String,
+		Integer,
 		Email,
 		PhoneNumber,
-		Range,
-		Rank,
-		Percent,
-		StaticOneSelection,
-		DynamicOneSelection,
-		PositiveInteger,
-		Integer,
-		Float,
-		Date,
-		Time,
-		Price,
-		Boolean,
 		ArrayOfStructure,
+
+		PositiveInteger,
+		Float,
+		Boolean,
+		Percent,
+		Date,
+		Euro,
+		Dollar,
+		Rial,
+
+		StaticOneSelection,
+		Range,
+		Time,
+		Rank,
+		DynamicOneSelection,
 		ArrayOfSimpleType
 	}
 }
