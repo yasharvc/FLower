@@ -42,40 +42,62 @@ namespace Core.Models.Fields
 			return errors;
 		}
 
-		private Dictionary<string, object> CastIntoStructure(IDictionary<string, object> value, out Dictionary<string, string> errors)
+		public IDictionary<string,string> UpdateValue(int index,IDictionary<string, object> value,out bool isSomethingUpdated,bool updateWithError = true)
 		{
-			var newItem = new Dictionary<string, object>();
-			errors = new Dictionary<string, string>();
-			foreach (var item in SubFields)
-				newItem = AddItemsByStructureValidation(value, errors, item);
-			return newItem;
-		}
-
-		private Dictionary<string, object> AddItemsByStructureValidation(IDictionary<string, object> value, Dictionary<string, string> errors, Field item)
-		{
-			var newItem = new Dictionary<string, object>();
-			if (value.ContainsKey(item.Name))
-			{
-				if (item.IsValid(value[item.Name]))
-					newItem[item.Name] = item.Convert(value[item.Name]);
-				else
-					errors[item.Name] = $"'{value[item.Name]}' is in wrong format for '{item.Name}' field with `{item.GetType().Name}` type.";
-			}
-			else
-			{
-				newItem[item.Name] = item.Default();
-			}
-			return newItem;
-		}
-
-		public IDictionary<string,string> UpdateValue(int index,IDictionary<string, object> value,bool updateWithError = true)
-		{
-			var updatedItem = CastIntoStructure(value, out Dictionary<string, string> errors);
+			isSomethingUpdated = false;
+			var updatedItem = CastIntoStructure(value, out Dictionary<string, string> errors, Data[index]);
 			if (updateWithError || errors.Count == 0)
+			{
+				foreach (var item in value)
+				{
+					if (!item.Value.Equals(Data[index][item.Key]))
+					{
+						isSomethingUpdated = true;
+						break;
+					}
+				}
 				Data[index] = updatedItem;
+			}
 			return errors;
 		}
 
+		public bool DeleteValue(int index)
+		{
+			if (Data.Count > index)
+			{
+				Data.RemoveAt(index);
+				return true;
+			}
+			return false;
+		}
+
 		public IEnumerable<IDictionary<string, object>> GetValues() => Data;
+
+		private Dictionary<string, object> CastIntoStructure(IDictionary<string, object> value, out Dictionary<string, string> errors, IDictionary<string,object> baseItem = null)
+		{
+			errors = new Dictionary<string, string>();
+			var newItem = AddItemsByStructureValidation(value, errors, baseItem);
+			return newItem;
+		}
+
+		private Dictionary<string, object> AddItemsByStructureValidation(IDictionary<string, object> value, Dictionary<string, string> errors, IDictionary<string, object> baseItem)
+		{
+			var newItem = new Dictionary<string, object>();
+			foreach (var item in SubFields)
+			{
+				if (value.ContainsKey(item.Name))
+				{
+					if (item.IsValid(value[item.Name]))
+						newItem[item.Name] = item.Convert(value[item.Name]);
+					else
+						errors[item.Name] = $"'{value[item.Name]}' is in wrong format for '{item.Name}' field with `{item.GetType().Name}` type.";
+				}
+				else
+				{
+					newItem[item.Name] = baseItem == null || !baseItem.ContainsKey(item.Name) ? item.Default() : baseItem[item.Name];
+				}
+			}
+			return newItem;
+		}
 	}
 }
