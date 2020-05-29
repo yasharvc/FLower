@@ -7,15 +7,15 @@
 		Email,
 		PhoneNumber,
 		ArrayOfStructure,
-
 		PositiveInteger,
 		Float,
 		Boolean,
 		Percent,
-		Date,
+		GregorianDate,
+		PersianDate,
 		Euro,
 		Dollar,
-		Rial,
+		PersianRial,
 
 		StaticOneSelection,
 		Range,

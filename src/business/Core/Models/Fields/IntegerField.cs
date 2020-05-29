@@ -24,7 +24,13 @@ namespace Core.Models.Fields
 			Min = min;
 			Max = max;
 		}
-
+		public override bool IsValid(object obj)
+		{
+			if (!base.IsValid(obj))
+				return false;
+			var value = Convert(obj);
+			return (int)value >= Min && (int)value <= Max;
+		}
 		public override object Default() => 0;
 		public override object Convert(object v) => System.Convert.ToInt32(v);
 	}
