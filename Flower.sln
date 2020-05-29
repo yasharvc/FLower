@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "src\business\Core\Core.csproj", "{4AC46F4E-8094-4462-9AE1-C5B5A97B5D52}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "src\business\Core\Core.csproj", "{4AC46F4E-8094-4462-9AE1-C5B5A97B5D52}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{84F0D9C5-5D32-4E7C-BE33-ED5307FF9762}"
 EndProject
@@ -17,9 +17,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit", "Unit", "{DE3A9AB5-3
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration", "{06ABB63B-A1F4-474E-B146-7FFC39DB67E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "tests\UnitTests\UnitTests.csproj", "{53561108-2B62-490E-B2EB-649D666C1EF8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "tests\UnitTests\UnitTests.csproj", "{53561108-2B62-490E-B2EB-649D666C1EF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InMemoryRepository", "src\business\InMemoryRepository\InMemoryRepository.csproj", "{F5701F49-42AA-4DBE-9E02-7AB985DE6AF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InMemoryRepository", "src\business\InMemoryRepository\InMemoryRepository.csproj", "{F5701F49-42AA-4DBE-9E02-7AB985DE6AF6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication", "src\application\WebApplication\WebApplication.csproj", "{4DBEC00D-5566-4982-AE27-666075955FCE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +69,18 @@ Global
 		{F5701F49-42AA-4DBE-9E02-7AB985DE6AF6}.Release|x64.Build.0 = Release|Any CPU
 		{F5701F49-42AA-4DBE-9E02-7AB985DE6AF6}.Release|x86.ActiveCfg = Release|Any CPU
 		{F5701F49-42AA-4DBE-9E02-7AB985DE6AF6}.Release|x86.Build.0 = Release|Any CPU
+		{4DBEC00D-5566-4982-AE27-666075955FCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DBEC00D-5566-4982-AE27-666075955FCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DBEC00D-5566-4982-AE27-666075955FCE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4DBEC00D-5566-4982-AE27-666075955FCE}.Debug|x64.Build.0 = Debug|Any CPU
+		{4DBEC00D-5566-4982-AE27-666075955FCE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4DBEC00D-5566-4982-AE27-666075955FCE}.Debug|x86.Build.0 = Debug|Any CPU
+		{4DBEC00D-5566-4982-AE27-666075955FCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DBEC00D-5566-4982-AE27-666075955FCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DBEC00D-5566-4982-AE27-666075955FCE}.Release|x64.ActiveCfg = Release|Any CPU
+		{4DBEC00D-5566-4982-AE27-666075955FCE}.Release|x64.Build.0 = Release|Any CPU
+		{4DBEC00D-5566-4982-AE27-666075955FCE}.Release|x86.ActiveCfg = Release|Any CPU
+		{4DBEC00D-5566-4982-AE27-666075955FCE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,6 +93,7 @@ Global
 		{06ABB63B-A1F4-474E-B146-7FFC39DB67E7} = {93916B03-B221-4684-B6F0-AD2D44DF2E4F}
 		{53561108-2B62-490E-B2EB-649D666C1EF8} = {DE3A9AB5-3197-493D-A7CF-F98B13E9428D}
 		{F5701F49-42AA-4DBE-9E02-7AB985DE6AF6} = {C384900B-C072-478A-ABFA-0062F1B8903E}
+		{4DBEC00D-5566-4982-AE27-666075955FCE} = {FD2C01BE-E324-42FC-AB23-39ECBC8FFD86}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {41FAB778-54E1-4D3F-B5D8-7872C3252F01}
