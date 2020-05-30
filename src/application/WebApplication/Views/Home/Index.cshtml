@@ -1,8 +1,121 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Home Page";
 }
+	
+@*<div id="q-app">
+	
+	<div class="q-pa-md q-gutter-sm">
+		
+		<q-btn color="secondary" label="Secondary"></q-btn>
+		<q-btn color="amber" glossy label="Amber"></q-btn>
+		<q-btn color="brown-5" label="Brown 5"></q-btn>
+		<q-btn color="deep-orange" glossy label="Deep Orange"></q-btn>
+		<q-btn color="purple" label="Purple"></q-btn>
+		<q-btn color="black" label="Black"></q-btn>
+	</div>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+	<div class="q-pa-md q-gutter-sm">
+		<q-btn round color="primary" icon="shopping_cart"></q-btn>
+		<q-btn round color="secondary" icon="navigation"></q-btn>
+		<q-btn round color="amber" glossy text-color="black" icon="layers_clear"></q-btn>
+		<q-btn round color="brown-5" icon="directions"></q-btn>
+		<q-btn round color="deep-orange" icon="edit_location"></q-btn>
+		<q-btn round color="purple" glossy icon="local_grocery_store"></q-btn>
+		<q-btn round color="black" icon="my_location"></q-btn>
+	</div>
+
+	<template>
+		<div class="q-pa-md q-gutter-sm">
+			<q-btn label="Carousel" color="primary" @@click="carousel = true"></q-btn>
+			<q-btn label="Card" color="primary" @@click="card = true"></q-btn>
+			<q-btn label="Sliders" color="primary" @@click="sliders = true"></q-btn>
+
+			<q-dialog v-model="carousel">
+				<q-carousel transition-prev="slide-right"
+							transition-next="slide-left"
+							swipeable
+							animated
+							v-model="slide"
+							control-color="primary"
+							navigation-icon="radio_button_unchecked"
+							navigation
+							padding
+							height="200px"
+							class="bg-white shadow-1 rounded-borders">
+					<q-carousel-slide :name="1" class="column no-wrap flex-center">
+						<q-icon name="style" color="primary" size="56px"></q-icon>
+						<div class="q-mt-md text-center">
+							{{ lorem }}
+						</div>
+					</q-carousel-slide>
+					<q-carousel-slide :name="2" class="column no-wrap flex-center">
+						<q-icon name="live_tv" color="primary" size="56px"></q-icon>
+						<div class="q-mt-md text-center">
+							{{ lorem }}
+						</div>
+					</q-carousel-slide>
+					<q-carousel-slide :name="3" class="column no-wrap flex-center">
+						<q-icon name="layers" color="primary" size="56px"></q-icon>
+						<div class="q-mt-md text-center">
+							{{ lorem }}
+						</div>
+					</q-carousel-slide>
+					<q-carousel-slide :name="4" class="column no-wrap flex-center">
+						<q-icon name="terrain" color="primary" size="56px"></q-icon>
+						<div class="q-mt-md text-center">
+							{{ lorem }}
+						</div>
+					</q-carousel-slide>
+				</q-carousel>
+			</q-dialog>
+
+			<q-dialog v-model="card">
+				<q-card class="my-card">
+					<q-img src="https://cdn.quasar.dev/img/chicken-salad.jpg"></q-img>
+
+					<q-card-section>
+						<q-btn fab
+							   color="primary"
+							   icon="place"
+							   class="absolute"
+							   style="top: 0; right: 12px; transform: translateY(-50%);"></q-btn>
+
+						<div class="row no-wrap items-center">
+							<div class="col text-h6 ellipsis">
+								Cafe Basilico
+							</div>
+							<div class="col-auto text-grey text-caption q-pt-md row no-wrap items-center">
+								<q-icon name="place"></q-icon>
+								250 ft
+							</div>
+						</div>
+
+						<q-rating v-model="stars" :max="5" size="32px"></q-rating>
+					</q-card-section>
+
+					<q-card-section class="q-pt-none">
+						<div class="text-subtitle1">
+							$・Italian, Cafe
+						</div>
+						<div class="text-caption text-grey">
+							Small plates, salads & sandwiches in an intimate setting.
+						</div>
+					</q-card-section>
+
+					<q-separator></q-separator>
+
+					<q-card-actions align="right">
+						<q-btn v-close-popup flat color="primary" label="Reserve"></q-btn>
+						<q-btn v-close-popup flat color="primary" round icon="event"></q-btn>
+					</q-card-actions>
+				</q-card>
+			</q-dialog>
+		</div>
+	</template>
+</div>*@
+
+@section Scripts{
+	<script>
+		Quasar.lang.set(Quasar.lang.fa)
+	</script>
+}

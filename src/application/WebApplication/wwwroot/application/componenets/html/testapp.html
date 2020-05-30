@@ -1,0 +1,12 @@
+﻿<h2>{{appName}}</h2>
+<form-component title="First name" v-bind:name="userName"></form-component>
+<text-component title="Simple text"></text-component>
+{{testVar}}
+<input v-model="testVar" />
+<script>
+	data = {
+		userName: "Yashar",
+		appName: "Phigaro",
+		testVar:"zzz"
+	};
+</script>

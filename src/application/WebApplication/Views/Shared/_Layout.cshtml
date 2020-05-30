@@ -17,33 +17,20 @@
 <body>
 	<script>
 		window.quasarConfig = {
-			brand: { // this will NOT work on IE 11
-				primary: '#e46262',
-				// ... or all other brand colors
-			},
+			brand: { primary: '#e46262' },
 			//notify: { ...}, // default set of options for Notify Quasar plugin
 			//loading: { ...}, // default set of options for Loading Quasar plugin
 			//loadingBar: { ... }, // settings for LoadingBar Quasar plugin
 			// ..and many more (check Installation card on each Quasar component/directive/plugin)
 		}
 	</script>
-	<script src="https://cdn.jsdelivr.net/npm/quasar@1.12.1/dist/quasar.ie.polyfills.umd.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/vue@^2.0.0/dist/vue.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/quasar@1.12.1/dist/quasar.umd.modern.min.js"></script>
-	<script>
-		/*
-		  Example kicking off the UI. Obviously, adapt this to your specific needs.
-		  Assumes you have a <div id="q-app"></div> in your <body> above
-		 */
-		new Vue({
-			el: '#q-app',
-			data: function () {
-				return {}
-			},
-			methods: {},
-			// ...etc
-		})
-	</script>
+	<script src="https://cdn.jsdelivr.net/npm/quasar@@1.12.1/dist/quasar.ie.polyfills.umd.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue@@^2.0.0/dist/vue.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/quasar@@1.12.1/dist/quasar.umd.modern.min.js"></script>
+
+	<script src="~/application/fileutil.js?@(Guid.NewGuid().ToString())"></script>
+	<script src="~/application/componenets/fieldhandler.js?@(Guid.NewGuid().ToString())"></script>
+
 	@RenderBody()
 	@RenderSection("Scripts", required: false)
 </body>
