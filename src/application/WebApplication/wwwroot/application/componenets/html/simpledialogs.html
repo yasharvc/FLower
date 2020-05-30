@@ -32,3 +32,8 @@
         </q-dialog>
     </div>
 </template>
+
+<q-inner-loading :showing="loadingDiv.show">
+    <q-spinner-gears size="50px" color="primary" />
+    <label>{{loadingDiv.msg}}</label>
+</q-inner-loading>

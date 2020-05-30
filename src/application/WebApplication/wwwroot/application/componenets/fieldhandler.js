@@ -26,8 +26,52 @@ function getdata() {
 		title: 'test',
 		msg: "Test"
 	};
+	res.loadingDiv = {
+		show: false,
+		msg: 'Please wait...'
+	};
 	return data;
 }
+var externalMethods = {};
+function getMethods() {
+	var x= {
+		firstpage: function (page) {
+			this.showLoading();
+			loadPage(page, function () {
+				app.showSimpleSuccess("Success", "Page loaded");
+				app.hideLoading();
+			}, function () {
+				debugger;
+			}, function () {
+				app.showSimpleDanger("Error", "Unauthorized access!");
+				app.hideLoading();
+			});
+		},
+		showSimpleSuccess: function (title, msg) {
+			this.simpleSuccessDialog.title = title;
+			this.simpleSuccessDialog.msg = msg;
+			this.simpleSuccessDialog.show = true;
+		},
+		showSimpleDanger: function (title, msg) {
+			this.simpleDangerDialog.title = title;
+			this.simpleDangerDialog.msg = msg;
+			this.simpleDangerDialog.show = true;
+		},
+		showLoading: function (msg) {
+			this.loadingDiv.show = true;
+			this.loadingDiv.msg = msg || 'Please wait...';
+		},
+		hideLoading: function () {
+			this.loadingDiv.show = false;
+			this.loadingDiv.msg = '';
+		},
+	};
+	for (var attr in externalMethods) {
+		x[attr] = externalMethods[attr];
+	}
+	return x;
+}
+
 var componenetsURLs = [
 	{ name: "text" },
 	{ name: "integer" },
@@ -109,28 +153,7 @@ function createApp(success) {
 				'form-component': formComponent,
 				'text-component': textComponent
 			},
-			methods: {
-				firstpage: function (page) {
-					loadPage(page, function () {
-						debugger;
-						app.showSimpleDanger("Success", "Page loaded");
-					}, function () {
-						debugger;
-					}, function () {
-						app.showSimpleDanger("Error", "Unauthorized access!");
-					});
-				},
-				showSimpleSuccess: function (title, msg) {
-					this.simpleSuccessDialog.title = title;
-					this.simpleSuccessDialog.msg = msg;
-					this.simpleSuccessDialog.show = true;
-				},
-				showSimpleDanger: function (title, msg) {
-					this.simpleDangerDialog.title = title;
-					this.simpleDangerDialog.msg = msg;
-					this.simpleDangerDialog.show = true;
-				}
-			}
+			methods: getMethods()
 		});
 		if (success)
 			success(app);
