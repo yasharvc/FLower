@@ -18,6 +18,7 @@
 	<link href="https://maxst.icons8.com/vue-static/landings/line-awesome/font-awesome-line-awesome/css/all.min.css" rel="stylesheet" type="text/css">
 	<link href="https://cdn.jsdelivr.net/npm/animate.css@@^4.0.0/animate.min.css" rel="stylesheet" type="text/css">
 	<link href="https://cdn.jsdelivr.net/npm/quasar@@1.12.1/dist/quasar.rtl.min.css" rel="stylesheet" type="text/css">
+	<script src="~/application/fileutil.js"></script>
 </head>
 <body>
 	<script>
@@ -52,7 +53,7 @@
 					</q-toolbar>
 
 					<q-tabs align="center">
-						<q-tab v-for="t in tabs" :label="t.title" :key="t.tabIndex" @@click="tab=t.tabIndex" ></q-tab>
+						<q-tab v-for="t in tabs" :label="t.title" @@click="changeTab(t.tabIndex)"></q-tab>
 					</q-tabs>
 				</q-header>
 
@@ -60,7 +61,7 @@
 					<q-scroll-area class="fit" style="height: calc(100% - 150px); margin-top: 150px; border-right: 1px solid #ddd">
 						<q-list v-for="(menuItem, index) in menuList" :key="index">
 
-							<q-item clickable :active="menuItem.label === 'Outbox'" v-ripple>
+							<q-item clickable :active="menuItem.label === 'Outbox'" @@click="menuClick(menuItem.id)" v-ripple>
 								<q-item-section avatar>
 									<q-icon :name="menuItem.icon" />
 								</q-item-section>
@@ -89,20 +90,20 @@
 					</q-drawer> -->
 
 				<q-page-container>
-					<div class="q-pa-md q-gutter-sm">
-						<gcse:search v-pre id="xyz">
-							<div v-if="myTab==topmenu.tab">
-								Hi {{test}}
-								<q-input filled v-model="test" label="Filled" />
-							</div>
-						</gcse:search>
+					<div class="q-pa-md q-gutter-sm" id="pages">
+						@*<gcse:search v-pre id="xyz">
+								<div v-if="myTab==topmenu.tab">
+									Hi {{test}}
+									<q-input filled v-model="test" label="Filled" />
+								</div>
+							</gcse:search>
 
-						<gcse:search v-pre id="zxy">
-							<div v-if="myTab==topmenu.tab">
-								Guten tag {{test}}!
-								<q-input filled v-model="test" label="Filled" />
-							</div>
-						</gcse:search>
+							<gcse:search v-pre id="zxy">
+								<div v-if="myTab==topmenu.tab">
+									Guten tag {{test}}!
+									<q-input filled v-model="test" label="Filled" />
+								</div>
+							</gcse:search>*@
 					</div>
 				</q-page-container>
 			</q-layout>
@@ -110,51 +111,57 @@
 	</div>
 	<script>
 		const tabs = [
-			{
-				tabIndex: 1,
-				title:'First'
-			},
-			{
-				tabIndex: 2,
-				title: 'Second'
-			},
 		];
 		const menuList = [
 			{
 				icon: 'inbox',
 				label: 'Inbox',
-				separator: true
+				separator: true,
+				link: '/pages/index?id=xyz',
+				id: 1
 			},
 			{
 				icon: 'send',
 				label: 'Outbox',
-				separator: false
+				separator: false,
+				link: '/pages/index?id=abc',
+				id: 2
 			},
 			{
 				icon: 'delete',
 				label: 'Trash',
-				separator: false
+				separator: false,
+				link: '/pages/index?id=tree',
+				id: 3
 			},
 			{
 				icon: 'error',
 				label: 'Spam',
-				separator: true
+				separator: true,
+				link: '/pages/index?id=iii',
+				id: 4
 			},
 			{
 				icon: 'settings',
 				label: 'Settings',
-				separator: false
+				separator: false,
+				link: '/pages/index?id=tyr',
+				id: 5
 			},
 			{
 				icon: 'feedback',
 				label: 'Send Feedback',
-				separator: false
+				separator: false,
+				link: '/pages/index?id=oio',
+				id: 6
 			},
 			{
 				icon: 'help',
 				iconColor: 'primary',
 				label: 'Help',
-				separator: false
+				separator: false,
+				link: '/pages/index?id=trrtg',
+				id: 7
 			}
 		]
 		var topmenu = new Vue({
@@ -166,26 +173,68 @@
 					tab: 0,
 					tabs
 				};
+			},
+			methods: {
+				changeTab: function (index) {
+					this.tab = parseInt(index);
+					console.log(index);
+				},
+				isTab: function (index) {
+					debugger;
+					return this.tab == index;
+				},
+				menuClick: function (id) {
+					this.tabs.push({
+						tabIndex: parseInt(id),
+						title: menuList[id - 1].label
+					});
+
+					setTimeout(function () {
+						var pages = document.getElementById('pages');
+						readHTML(menuList[id - 1].link + '&index=' + id, function (d, content) {
+							var scripts = getScripts(content);
+							pages.appendChild(makePage('_rr' + id, content));
+							scripts.forEach(m => eval(m));
+						});
+					}, 100);
+				}
 			}
 		});
-		var app = new Vue({
-			el: '#xyz',
-			data: function () {
-				return {
-					test: 'name',
-					myTab: 1
-				};
-			}
-		});
-		var app2 = new Vue({
-			el: '#zxy',
-			data: function () {
-				return {
-					test: 'Yashar',
-					myTab: 2
-				};
-			}
-		});
+function getScripts(tes) {
+	var res = [];
+	var start = 0;
+	var end = 0;
+
+	while (true) {
+		start = tes.indexOf('<' + 'script>', end);
+		if (start == -1)
+			return res;
+		start += 'lscriptl'.length
+		end = tes.indexOf('</' + 'script>', start);
+		if (end == -1)
+			return res;
+		res.push(tes.substring(start, end));
+	}
+}
+
+	function makePage(id, innerHTML) {
+	var el = document.createElement('gcse:search');
+	el.setAttribute("v-pre", "");
+	//el.id = id;
+	el.innerHTML = innerHTML;
+	return el;
+	}
+
+	//var app = new Vue({
+	//	el: '#xyz',
+	//	data: function () {
+	//		return {
+	//			test: 'name',
+	//			myTab: 1
+	//		};
+	//	}
+	//});
+	//var app2 = new Vue({el: '#zxy',data: function () {return {test: 'Yashar',myTab: 2};}});
 	</script>
 </body>
 </html>

@@ -4,9 +4,10 @@ namespace WebApplication.Controllers
 {
 	public class PagesController : Controller
 	{
-		public IActionResult Index()
+		public IActionResult Index(string id,int index)
 		{
-			return View();
+			ViewBag.index = index;
+			return View("Index", id);
 		}
 
 		public IActionResult Unauth() => Unauthorized("Not allowed");

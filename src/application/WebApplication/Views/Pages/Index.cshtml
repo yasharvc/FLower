@@ -1,11 +1,25 @@
-﻿@{ 
+﻿@model string
+@{ 
 	Layout = null;
 }
-Hi {{name}}!
-<input v-model="name" />
-<q-btn label="Click me" color="primary" @@click="added()" />
+	<div id="@Model" v-show="ismine">
+		Hi {{name}}!
+		<q-input v-model="name" />
+		<q-btn label="Click me" color="primary"/>
+	</div>
 <script>
-	data = {
-		name:"yashar"
+
+	var data = {
+		name: "@Model",
+		myTab: @ViewBag.index
 	}
+	new Vue({
+		el: '#@Model',
+		data: data,
+		computed: {
+			ismine: function () {
+				return this.myTab == topmenu.tab;
+			}
+		}
+	});
 </script>
