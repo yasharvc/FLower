@@ -48,8 +48,6 @@
 							</q-avatar>
 							Flower
 						</q-toolbar-title>
-
-						@*<q-btn dense flat round icon="menu" @@click="right = !right"></q-btn>*@
 					</q-toolbar>
 
 					<q-tabs align="center">
@@ -85,29 +83,51 @@
 					</q-img>
 				</q-drawer>
 
-				<!-- <q-drawer show-if-above v-model="right" side="right" bordered>
-				drawer content
-					</q-drawer> -->
-
 				<q-page-container>
 					<div class="q-pa-md q-gutter-sm" id="pages">
-						@*<gcse:search v-pre id="xyz">
-								<div v-if="myTab==topmenu.tab">
-									Hi {{test}}
-									<q-input filled v-model="test" label="Filled" />
-								</div>
-							</gcse:search>
-
-							<gcse:search v-pre id="zxy">
-								<div v-if="myTab==topmenu.tab">
-									Guten tag {{test}}!
-									<q-input filled v-model="test" label="Filled" />
-								</div>
-							</gcse:search>*@
 					</div>
 				</q-page-container>
 			</q-layout>
 		</template>
+		<template>
+			<div class="q-pa-md q-gutter-sm">
+				<q-dialog v-model="simpleSuccessDialog.show" persistent transition-show="scale" transition-hide="scale">
+					<q-card class="bg-teal text-white" style="width: 300px">
+						<q-card-section>
+							<div class="text-h6">{{simpleSuccessDialog.title}}</div>
+						</q-card-section>
+
+						<q-card-section class="q-pt-none">
+							{{simpleSuccessDialog.msg}}
+						</q-card-section>
+
+						<q-card-actions align="right" class="bg-white text-teal">
+							<q-btn flat label="OK" v-close-popup />
+						</q-card-actions>
+					</q-card>
+				</q-dialog>
+				<q-dialog v-model="simpleDangerDialog.show" persistent transition-show="scale" transition-hide="scale">
+					<q-card class="bg-red text-white" style="width: 300px">
+						<q-card-section>
+							<div class="text-h6">{{simpleDangerDialog.title}}</div>
+						</q-card-section>
+
+						<q-card-section class="q-pt-none">
+							{{simpleDangerDialog.msg}}
+						</q-card-section>
+
+						<q-card-actions align="right" class="bg-white text-teal">
+							<q-btn flat label="OK" v-close-popup />
+						</q-card-actions>
+					</q-card>
+				</q-dialog>
+			</div>
+		</template>
+
+		<q-inner-loading :showing="loadingDiv.show">
+			<q-spinner-gears size="50px" color="primary" />
+			<label>{{loadingDiv.msg}}</label>
+		</q-inner-loading>
 	</div>
 	<script>
 		const tabs = [
@@ -117,21 +137,21 @@
 				icon: 'inbox',
 				label: 'Inbox',
 				separator: true,
-				link: '/pages/index?id=xyz',
+				link: '/pages/index?id=Yashar',
 				id: 1
 			},
 			{
 				icon: 'send',
 				label: 'Outbox',
 				separator: false,
-				link: '/pages/index?id=abc',
+				link: '/pages/index?id=Samad',
 				id: 2
 			},
 			{
 				icon: 'delete',
 				label: 'Trash',
 				separator: false,
-				link: '/pages/index?id=tree',
+				link: '/pages/index?id=Sahar',
 				id: 3
 			},
 			{
@@ -171,7 +191,21 @@
 					left: false,
 					menuList,
 					tab: 0,
-					tabs
+					tabs,
+					simpleSuccessDialog:{
+						show: false,
+						title: 'test',
+						msg: "Test"
+					},
+					simpleDangerDialog : {
+						show: false,
+						title: 'test',
+						msg: "Test"
+					},
+					loadingDiv:{
+						show: false,
+						msg: 'Please wait...'
+					}
 				};
 			},
 			methods: {
@@ -188,53 +222,56 @@
 						tabIndex: parseInt(id),
 						title: menuList[id - 1].label
 					});
-
-					setTimeout(function () {
-						var pages = document.getElementById('pages');
-						readHTML(menuList[id - 1].link + '&index=' + id, function (d, content) {
-							var scripts = getScripts(content);
-							pages.appendChild(makePage('_rr' + id, content));
-							scripts.forEach(m => eval(m));
-						});
-					}, 100);
-				}
+					var pages = document.getElementById('pages');
+					readHTML(menuList[id - 1].link + '&index=' + id, function (d, content) {
+						var scripts = getScripts(content);
+						pages.appendChild(makePage(content));
+						scripts.forEach(m => eval(m));
+					});
+				},
+				showSimpleSuccess: function (title, msg) {
+					this.simpleSuccessDialog.title = title;
+					this.simpleSuccessDialog.msg = msg;
+					this.simpleSuccessDialog.show = true;
+				},
+				showSimpleDanger: function (title, msg) {
+					this.simpleDangerDialog.title = title;
+					this.simpleDangerDialog.msg = msg;
+					this.simpleDangerDialog.show = true;
+				},
+				showLoading: function (msg) {
+					this.loadingDiv.show = true;
+					this.loadingDiv.msg = msg || 'Please wait...';
+				},
+				hideLoading: function () {
+					this.loadingDiv.show = false;
+					this.loadingDiv.msg = '';
+				},
 			}
 		});
-function getScripts(tes) {
-	var res = [];
-	var start = 0;
-	var end = 0;
+		function getScripts(tes) {
+			var res = [];
+			var start = 0;
+			var end = 0;
 
-	while (true) {
-		start = tes.indexOf('<' + 'script>', end);
-		if (start == -1)
-			return res;
-		start += 'lscriptl'.length
-		end = tes.indexOf('</' + 'script>', start);
-		if (end == -1)
-			return res;
-		res.push(tes.substring(start, end));
-	}
-}
+			while (true) {
+				start = tes.indexOf('<' + 'script>', end);
+				if (start == -1)
+					return res;
+				start += 'lscriptl'.length
+				end = tes.indexOf('</' + 'script>', start);
+				if (end == -1)
+					return res;
+				res.push(tes.substring(start, end));
+			}
+		}
 
-	function makePage(id, innerHTML) {
-	var el = document.createElement('gcse:search');
-	el.setAttribute("v-pre", "");
-	//el.id = id;
-	el.innerHTML = innerHTML;
-	return el;
-	}
-
-	//var app = new Vue({
-	//	el: '#xyz',
-	//	data: function () {
-	//		return {
-	//			test: 'name',
-	//			myTab: 1
-	//		};
-	//	}
-	//});
-	//var app2 = new Vue({el: '#zxy',data: function () {return {test: 'Yashar',myTab: 2};}});
+		function makePage(innerHTML) {
+			var el = document.createElement('gcse:search');
+			el.setAttribute("v-pre", "");
+			el.innerHTML = innerHTML;
+			return el;
+		}
 	</script>
 </body>
 </html>

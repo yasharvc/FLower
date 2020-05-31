@@ -5,7 +5,7 @@
 	<div id="@Model" v-show="ismine">
 		Hi {{name}}!
 		<q-input v-model="name" />
-		<q-btn label="Click me" color="primary"/>
+		<q-btn label="Click me" color="primary" @@click="showSuccess()"/>
 	</div>
 <script>
 
@@ -19,6 +19,11 @@
 		computed: {
 			ismine: function () {
 				return this.myTab == topmenu.tab;
+			}
+		},
+		methods: {
+			showSuccess: function () {
+				topmenu.showSimpleSuccess('@Model', this.name);
 			}
 		}
 	});
