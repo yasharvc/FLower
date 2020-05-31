@@ -10,5 +10,7 @@ namespace WebApplication.Controllers
 		}
 
 		public IActionResult Unauth() => Unauthorized("Not allowed");
+
+		public IActionResult Test() => View();
 	}
 }

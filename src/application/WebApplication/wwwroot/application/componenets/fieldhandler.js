@@ -77,6 +77,7 @@ var componenetsURLs = [
 	{ name: "integer" },
 	{ name: "helloworld" },
 	{ name: "simpledialogs", isForApp: true },
+	{ name: "basestructure", isForApp: true },
 ];
 
 function uuidv4() {
