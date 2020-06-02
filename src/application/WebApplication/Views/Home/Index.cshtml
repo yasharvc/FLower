@@ -1,121 +1,258 @@
 ﻿@{
 	ViewData["Title"] = "Home Page";
 }
-	
-@*<div id="q-app">
-	
-	<div class="q-pa-md q-gutter-sm">
-		
-		<q-btn color="secondary" label="Secondary"></q-btn>
-		<q-btn color="amber" glossy label="Amber"></q-btn>
-		<q-btn color="brown-5" label="Brown 5"></q-btn>
-		<q-btn color="deep-orange" glossy label="Deep Orange"></q-btn>
-		<q-btn color="purple" label="Purple"></q-btn>
-		<q-btn color="black" label="Black"></q-btn>
-	</div>
 
-	<div class="q-pa-md q-gutter-sm">
-		<q-btn round color="primary" icon="shopping_cart"></q-btn>
-		<q-btn round color="secondary" icon="navigation"></q-btn>
-		<q-btn round color="amber" glossy text-color="black" icon="layers_clear"></q-btn>
-		<q-btn round color="brown-5" icon="directions"></q-btn>
-		<q-btn round color="deep-orange" icon="edit_location"></q-btn>
-		<q-btn round color="purple" glossy icon="local_grocery_store"></q-btn>
-		<q-btn round color="black" icon="my_location"></q-btn>
-	</div>
+<div id="topmenu">
+	<template>
+		<q-layout view="hHh LpR fFf">
 
+			<q-header reveal elevated class="bg-primary text-white" height-hint="98">
+				<q-toolbar>
+					<q-btn dense flat round icon="menu" @@click="left = !left"></q-btn>
+
+					<q-toolbar-title>
+						<q-avatar>
+							<img src="https://cdn.quasar.dev/logo/svg/quasar-logo.svg">
+						</q-avatar>
+						Flower
+					</q-toolbar-title>
+				</q-toolbar>
+
+				<q-tabs align="center">
+					<q-tab v-for="t in tabs" :label="t.title" @@click="changeTab(t.tabIndex)"></q-tab>
+				</q-tabs>
+			</q-header>
+
+			<q-drawer show-if-above v-model="left" side="left" behavior="desktop" bordered>
+				<q-scroll-area class="fit" style="height: calc(100% - 150px); margin-top: 150px; border-right: 1px solid #ddd">
+					<q-list v-for="(menuItem, index) in menuList" :key="index">
+
+						<q-item clickable :active="menuItem.label === 'Outbox'" @@click="menuClick(menuItem.id)" v-ripple>
+							<q-item-section avatar>
+								<q-icon :name="menuItem.icon" />
+							</q-item-section>
+							<q-item-section>
+								{{ menuItem.label }}
+							</q-item-section>
+						</q-item>
+
+						<q-separator v-if="menuItem.separator" />
+
+					</q-list>
+				</q-scroll-area>
+				<q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 150px">
+					<div class="absolute-bottom bg-transparent">
+						<q-avatar size="56px" class="q-mb-sm">
+							<img src="https://cdn.quasar.dev/img/boy-avatar.png">
+						</q-avatar>
+						<div class="text-weight-bold">Razvan Stoenescu</div>
+						<div>@@rstoenescu</div>
+					</div>
+				</q-img>
+			</q-drawer>
+
+			<q-page-container>
+				<div class="q-pa-md q-gutter-sm" id="pages">
+				</div>
+			</q-page-container>
+		</q-layout>
+	</template>
 	<template>
 		<div class="q-pa-md q-gutter-sm">
-			<q-btn label="Carousel" color="primary" @@click="carousel = true"></q-btn>
-			<q-btn label="Card" color="primary" @@click="card = true"></q-btn>
-			<q-btn label="Sliders" color="primary" @@click="sliders = true"></q-btn>
-
-			<q-dialog v-model="carousel">
-				<q-carousel transition-prev="slide-right"
-							transition-next="slide-left"
-							swipeable
-							animated
-							v-model="slide"
-							control-color="primary"
-							navigation-icon="radio_button_unchecked"
-							navigation
-							padding
-							height="200px"
-							class="bg-white shadow-1 rounded-borders">
-					<q-carousel-slide :name="1" class="column no-wrap flex-center">
-						<q-icon name="style" color="primary" size="56px"></q-icon>
-						<div class="q-mt-md text-center">
-							{{ lorem }}
-						</div>
-					</q-carousel-slide>
-					<q-carousel-slide :name="2" class="column no-wrap flex-center">
-						<q-icon name="live_tv" color="primary" size="56px"></q-icon>
-						<div class="q-mt-md text-center">
-							{{ lorem }}
-						</div>
-					</q-carousel-slide>
-					<q-carousel-slide :name="3" class="column no-wrap flex-center">
-						<q-icon name="layers" color="primary" size="56px"></q-icon>
-						<div class="q-mt-md text-center">
-							{{ lorem }}
-						</div>
-					</q-carousel-slide>
-					<q-carousel-slide :name="4" class="column no-wrap flex-center">
-						<q-icon name="terrain" color="primary" size="56px"></q-icon>
-						<div class="q-mt-md text-center">
-							{{ lorem }}
-						</div>
-					</q-carousel-slide>
-				</q-carousel>
-			</q-dialog>
-
-			<q-dialog v-model="card">
-				<q-card class="my-card">
-					<q-img src="https://cdn.quasar.dev/img/chicken-salad.jpg"></q-img>
-
+			<q-dialog v-model="simpleSuccessDialog.show" persistent transition-show="scale" transition-hide="scale">
+				<q-card class="bg-teal text-white" style="width: 300px">
 					<q-card-section>
-						<q-btn fab
-							   color="primary"
-							   icon="place"
-							   class="absolute"
-							   style="top: 0; right: 12px; transform: translateY(-50%);"></q-btn>
-
-						<div class="row no-wrap items-center">
-							<div class="col text-h6 ellipsis">
-								Cafe Basilico
-							</div>
-							<div class="col-auto text-grey text-caption q-pt-md row no-wrap items-center">
-								<q-icon name="place"></q-icon>
-								250 ft
-							</div>
-						</div>
-
-						<q-rating v-model="stars" :max="5" size="32px"></q-rating>
+						<div class="text-h6">{{simpleSuccessDialog.title}}</div>
 					</q-card-section>
 
 					<q-card-section class="q-pt-none">
-						<div class="text-subtitle1">
-							$・Italian, Cafe
-						</div>
-						<div class="text-caption text-grey">
-							Small plates, salads & sandwiches in an intimate setting.
-						</div>
+						{{simpleSuccessDialog.msg}}
 					</q-card-section>
 
-					<q-separator></q-separator>
+					<q-card-actions align="right" class="bg-white text-teal">
+						<q-btn flat label="OK" v-close-popup />
+					</q-card-actions>
+				</q-card>
+			</q-dialog>
+			<q-dialog v-model="simpleDangerDialog.show" persistent transition-show="scale" transition-hide="scale">
+				<q-card class="bg-red text-white" style="width: 300px">
+					<q-card-section>
+						<div class="text-h6">{{simpleDangerDialog.title}}</div>
+					</q-card-section>
 
-					<q-card-actions align="right">
-						<q-btn v-close-popup flat color="primary" label="Reserve"></q-btn>
-						<q-btn v-close-popup flat color="primary" round icon="event"></q-btn>
+					<q-card-section class="q-pt-none">
+						{{simpleDangerDialog.msg}}
+					</q-card-section>
+
+					<q-card-actions align="right" class="bg-white text-teal">
+						<q-btn flat label="OK" v-close-popup />
 					</q-card-actions>
 				</q-card>
 			</q-dialog>
 		</div>
 	</template>
-</div>*@
+
+	<q-inner-loading :showing="loadingDiv.show">
+		<q-spinner-gears size="50px" color="primary" />
+		<label>{{loadingDiv.msg}}</label>
+	</q-inner-loading>
+</div>
+<script>
+	const tabs = [
+	];
+	const menuList = [
+		//{
+		//	icon: 'inbox',
+		//	label: 'Inbox',
+		//	separator: true,
+		//	link: '/pages/index?id=Yashar',
+		//	id: 1
+		//},
+		//{
+		//	icon: 'send',
+		//	label: 'Outbox',
+		//	separator: false,
+		//	link: '/pages/index?id=Samad',
+		//	id: 2
+		//},
+		//{
+		//	icon: 'delete',
+		//	label: 'Trash',
+		//	separator: false,
+		//	link: '/pages/index?id=Sahar',
+		//	id: 3
+		//},
+		//{
+		//	icon: 'error',
+		//	label: 'Spam',
+		//	separator: true,
+		//	link: '/pages/index?id=iii',
+		//	id: 4
+		//},
+		//{
+		//	icon: 'settings',
+		//	label: 'Settings',
+		//	separator: false,
+		//	link: '/pages/index?id=tyr',
+		//	id: 5
+		//},
+		//{
+		//	icon: 'feedback',
+		//	label: 'Send Feedback',
+		//	separator: false,
+		//	link: '/pages/index?id=oio',
+		//	id: 6
+		//},
+		//{
+		//	icon: 'help',
+		//	iconColor: 'primary',
+		//	label: 'Help',
+		//	separator: false,
+		//	link: '/pages/index?id=trrtg',
+		//	id: 7
+		//}
+	]
+	var topmenu = new Vue({
+		el: '#topmenu',
+		data: function () {
+			return {
+				left: false,
+				menuList,
+				tab: 0,
+				tabs,
+				simpleSuccessDialog: {
+					show: false,
+					title: 'test',
+					msg: "Test"
+				},
+				simpleDangerDialog: {
+					show: false,
+					title: 'test',
+					msg: "Test"
+				},
+				loadingDiv: {
+					show: false,
+					msg: 'Please wait...'
+				}
+			};
+		},
+		created: function () {
+			this.showLoading();
+			axios.get("/Pages/Menu")
+				.then(function (response) {
+					debugger;
+					topmenu.menuList = response.data;
+					topmenu.hideLoading();
+				});
+		},
+		methods: {
+			changeTab: function (index) {
+				this.tab = parseInt(index);
+				console.log(index);
+			},
+			isTab: function (index) {
+				debugger;
+				return this.tab == index;
+			},
+			menuClick: function (id) {
+				this.tabs.push({
+					tabIndex: parseInt(id),
+					title: menuList[id - 1].label
+				});
+				var pages = document.getElementById('pages');
+				readHTML(menuList[id - 1].link + '&index=' + id, function (d, content) {
+					var scripts = getScripts(content);
+					pages.appendChild(makePage(content));
+					scripts.forEach(m => eval(m));
+				});
+			},
+			showSimpleSuccess: function (title, msg) {
+				this.simpleSuccessDialog.title = title;
+				this.simpleSuccessDialog.msg = msg;
+				this.simpleSuccessDialog.show = true;
+			},
+			showSimpleDanger: function (title, msg) {
+				this.simpleDangerDialog.title = title;
+				this.simpleDangerDialog.msg = msg;
+				this.simpleDangerDialog.show = true;
+			},
+			showLoading: function (msg) {
+				this.loadingDiv.show = true;
+				this.loadingDiv.msg = msg || 'Please wait...';
+			},
+			hideLoading: function () {
+				this.loadingDiv.show = false;
+				this.loadingDiv.msg = '';
+			},
+		}
+	});
+	function getScripts(tes) {
+		var res = [];
+		var start = 0;
+		var end = 0;
+
+		while (true) {
+			start = tes.indexOf('<' + 'script>', end);
+			if (start == -1)
+				return res;
+			start += 'lscriptl'.length
+			end = tes.indexOf('</' + 'script>', start);
+			if (end == -1)
+				return res;
+			res.push(tes.substring(start, end));
+		}
+	}
+
+	function makePage(innerHTML) {
+		var el = document.createElement('gcse:search');
+		el.setAttribute("v-pre", "");
+		el.innerHTML = innerHTML;
+		return el;
+	}
+</script>
 
 @section Scripts{
-	<script>
+	@*<script>
 		Quasar.lang.set(Quasar.lang.fa)
-	</script>
+	</script>*@
 }
