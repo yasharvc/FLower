@@ -178,6 +178,7 @@
 		},
 		created: function () {
 			this.showLoading();
+			this.$q.addressbarColor.set('#a2e3fa');
 			axios.get("/Pages/Menu")
 				.then(function (response) {
 					debugger;
