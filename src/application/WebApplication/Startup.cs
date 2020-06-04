@@ -12,17 +12,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Core.Models.Security;
 
 namespace WebApplication
 {
 	public class Startup
 	{
-		public Startup(IConfiguration configuration)
-		{
-			Configuration = configuration;
-		}
-
 		public IConfiguration Configuration { get; }
+
+		public Startup(IConfiguration configuration) => Configuration = configuration;
 
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
@@ -31,13 +30,22 @@ namespace WebApplication
 			{
 				options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
 			});
+			AuthenticationSetup(services);
+
+			services.AddControllersWithViews();
+		}
+
+		private void AuthenticationSetup(IServiceCollection services)
+		{
+			var authenticationSettings = new AuthenticationSettings();
+			Configuration.Bind("AuthenticationSettings", authenticationSettings);
 
 			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 				.AddCookie(options =>
 				{
-					options.LogoutPath = "/Security/Logout";
-					options.LoginPath = "/Security/Login";
-					options.AccessDeniedPath = "/Security/Forbidden";
+					options.LogoutPath = authenticationSettings.LogoutPath;
+					options.LoginPath = authenticationSettings.LoginPath;
+					options.AccessDeniedPath = authenticationSettings.AccessDeniedPath;
 				}
 				);
 
@@ -45,13 +53,22 @@ namespace WebApplication
 				.SetDefaultKeyLifetime(TimeSpan.FromDays(15))
 				.SetApplicationName("Flower")
 				.DisableAutomaticKeyGeneration();
-
-			services.AddControllersWithViews();
 			services.Configure<IdentityOptions>(options =>
 			{
 				options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
 				options.Lockout.MaxFailedAccessAttempts = 3;
 				options.Lockout.AllowedForNewUsers = true;
+			});
+
+			services.AddTransient(sp =>
+			{
+				return new AuthenticationProperties
+				{
+					AllowRefresh = authenticationSettings.AllowRefresh,
+					ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(authenticationSettings.ExpireMinutes),
+					IsPersistent = authenticationSettings.IsPersistent,
+					IssuedUtc = DateTimeOffset.UtcNow
+				};
 			});
 		}
 

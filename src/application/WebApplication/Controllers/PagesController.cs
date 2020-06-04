@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using WebApplication.Models;
 
@@ -8,6 +9,10 @@ namespace WebApplication.Controllers
 	[Authorize]
 	public class PagesController : BaseController
 	{
+		public PagesController(IServiceProvider serviceProvider) : base(serviceProvider)
+		{
+		}
+
 		public IActionResult Index(string id,int index)
 		{
 			ViewBag.index = index;

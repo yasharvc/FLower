@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Diagnostics;
 using WebApplication.Models;
 
 namespace WebApplication.Controllers
 {
 	[Authorize]
-	public class HomeController : Controller
+	public class HomeController : BaseController
 	{
 		private readonly ILogger<HomeController> _logger;
 
-		public HomeController(ILogger<HomeController> logger)
+		public HomeController(ILogger<HomeController> logger, IServiceProvider serviceProvider) : base(serviceProvider)
 		{
 			_logger = logger;
 		}
@@ -23,7 +22,8 @@ namespace WebApplication.Controllers
 		[AllowAnonymous]
 		public IActionResult Index()
 		{
-			return View();
+			var authProps = GetService<AuthenticationProperties>();
+			return View(authProps);
 		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
