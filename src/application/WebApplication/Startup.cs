@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Core.Models.Security;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace WebApplication
 {
@@ -29,6 +30,10 @@ namespace WebApplication
 			services.AddMvc(options =>
 			{
 				options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+				var policy = new AuthorizationPolicyBuilder()
+				.RequireAuthenticatedUser()
+				.Build();
+				options.Filters.Add(new AuthorizeFilter(policy));
 			});
 			AuthenticationSetup(services);
 
