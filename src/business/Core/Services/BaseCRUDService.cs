@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace Core.Services
 {
-	internal class BaseCRUDService<T> : ICRUDRepository<T> where T: Model
+	public abstract class BaseCRUDService<T> : ICRUDRepository<T> where T: Model
 	{
 		protected ICRUDRepository<T> Repository { get; set; }
-		public BaseCRUDService(ICRUDRepository<T> repository) => Repository = repository;
+		internal BaseCRUDService(ICRUDRepository<T> repository) => Repository = repository;
 		public async Task Create(T entity) => await Repository.Create(entity);
 
 		public async Task Delete(T entity) => await Repository.Delete(entity);

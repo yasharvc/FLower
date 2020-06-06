@@ -4,12 +4,12 @@ using Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace InMemoryRepository
 {
-	public abstract class InMemoryRepository<T> : ICRUDRepository<T> where T : Model
+	public abstract class InMemoryRepository<T> : ICRUDRepository<T> where T : Model,new()
 	{
 		protected List<T> repository { get; set; } = new List<T>();
 		public int Count => repository.Count;
@@ -48,14 +48,53 @@ namespace InMemoryRepository
 			Dictionary<string, bool> sort,
 			List<Comparison> conditions, int page, int sizeInPage)
 		{
-			var list = repository.Where(x => GetWhere(x,conditions)).AsQueryable();
+			var wheredList = repository.Where(x => GetWhere(x,conditions));
+			var sortedList = Sort(wheredList, sort).Select(m => Select(m, fieldsList));
 			return await Task.Run(() => new GenericQueryResult<T>
 			{
-				Result = list,
+				Result = sortedList.AsQueryable(),
 				ID = Guid.NewGuid().ToString(),
-				TotalRecordCount = list.Count()
+				TotalRecordCount = sortedList.Count()
 
 			});
+		}
+
+		private T Select(T m, List<string> props)
+		{
+			T myobject = new T();
+
+			foreach (var item in props)
+			{
+				var prop = m.GetType().GetProperty(item);
+				if(prop != null)
+					prop.SetValue(myobject, prop.GetValue(m));
+			}
+			return myobject;
+		}
+
+		private IOrderedEnumerable<T> Sort(IEnumerable<T> wheredList, Dictionary<string, bool> sorts)
+		{
+			bool isSorted = false;
+			IOrderedEnumerable<T> res = null;
+
+			foreach (var sort in sorts)
+			{
+				var _class = Expression.Parameter(typeof(T), "cls");
+				var nameSelection = Expression.PropertyOrField(_class, sort.Key);
+				var lambda = Expression.Lambda<Func<T, string>>(nameSelection, _class);
+				if (!isSorted)
+				{
+					res = sort.Value ?
+						wheredList.OrderBy(lambda.Compile())
+						: wheredList.OrderByDescending(lambda.Compile());
+					isSorted = true;
+				}
+				else
+					res = sort.Value ?
+						res.ThenBy(lambda.Compile())
+						: res.ThenByDescending(lambda.Compile());
+			}
+			return res;
 		}
 
 		private bool GetWhere(T x,List<Comparison> conditions)

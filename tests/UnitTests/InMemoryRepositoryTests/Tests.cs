@@ -1,5 +1,6 @@
 ﻿using Core.Interfaces.Repositories;
 using Core.Models;
+using InMemoryRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,15 @@ namespace UnitTests.InMemoryRepositoryTests
 {
 	public class Tests : BaseTest
 	{
+		class TestClass : Model
+		{
+			public string Name { get; set; }
+			public int Age { get; set; }
+		}
+		class repo : InMemoryRepository<TestClass>
+		{
+
+		}
 		[Fact]
 		public async void ShouldFilterByUniqueID()
 		{
@@ -38,6 +48,29 @@ namespace UnitTests.InMemoryRepositoryTests
 
 			Assert.NotNull(res);
 			Assert.Equal(stage.UniqueID, res.Result.ElementAt(0).UniqueID);
+		}
+
+		[Fact]
+		public async void ShouldSortByName()
+		{
+			var repo = new repo();
+			await repo.Create(new TestClass
+			{
+				Name = "Yashar",
+				Age = 34
+			});
+			await repo.Create(new TestClass
+			{
+				Name = "Zahra",
+				Age = 34
+			});
+
+			var res = await repo.Query(new List<string> { "Name", "Age" },
+				new Dictionary<string, bool>
+				{
+					{ "Name",false }
+				}, new List<Comparison>(), 1, 1);
+			Assert.Equal("Zahra", res.Result.First().Name);
 		}
 	}
 }
