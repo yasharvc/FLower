@@ -12,5 +12,6 @@ namespace Core.Interfaces.Repositories
 			List<Comparison> conditions,
 			int page,
 			int sizeInPage);
+		Task<T> GetByID(string id);
 	}
 }

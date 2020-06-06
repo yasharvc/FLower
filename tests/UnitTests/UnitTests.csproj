@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\business\Core\Core.csproj" />
     <ProjectReference Include="..\..\src\business\InMemoryRepository\InMemoryRepository.csproj" />
+    <ProjectReference Include="..\..\src\business\Repositories\MongoDBRepository\MongoDBRepository.csproj" />
   </ItemGroup>
 
 </Project>

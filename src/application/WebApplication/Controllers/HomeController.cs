@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Core.Interfaces.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using WebApplication.Models;
 
 namespace WebApplication.Controllers
@@ -20,7 +22,7 @@ namespace WebApplication.Controllers
 		}
 
 		[AllowAnonymous]
-		public IActionResult Index()
+		public async Task<IActionResult> Index()
 		{
 			var authProps = GetService<AuthenticationProperties>();
 			return View(authProps);

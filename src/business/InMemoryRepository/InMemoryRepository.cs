@@ -16,7 +16,7 @@ namespace InMemoryRepository
 
 		public async Task Create(T entity)
 		{
-			entity.ID = Guid.NewGuid().ToString();
+			entity._id = Guid.NewGuid().ToString();
 			await Task.Run(() => repository.Add(entity));
 		}
 
@@ -38,7 +38,7 @@ namespace InMemoryRepository
 		{
 			for (int i = 0; i < repository.Count; i++)
 			{
-				if (repository[i].ID == entity.ID)
+				if (repository[i]._id == entity._id)
 					return i;
 			}
 			return -1;
@@ -53,7 +53,7 @@ namespace InMemoryRepository
 			return await Task.Run(() => new GenericQueryResult<T>
 			{
 				Result = sortedList.AsQueryable(),
-				ID = Guid.NewGuid().ToString(),
+				_id = Guid.NewGuid().ToString(),
 				TotalRecordCount = sortedList.Count()
 
 			});
@@ -146,5 +146,7 @@ namespace InMemoryRepository
 			}
 			return res;
 		}
+
+		public async Task<T> GetByID(string id) => await Task.Run(() => repository.Single(m => m._id == id));
 	}
 }

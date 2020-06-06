@@ -1,20 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Core.Interfaces.Repositories;
+using Core.Interfaces.Services;
+using Core.Models.Security;
+using Core.Models.SystemModels;
+using Core.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
-using Core.Models.Security;
-using Microsoft.AspNetCore.Mvc.Authorization;
+using MongoDBRepository;
+using System;
 
 namespace WebApplication
 {
@@ -37,7 +39,29 @@ namespace WebApplication
 			});
 			AuthenticationSetup(services);
 
+			AddRepositories(services);
+			AddServices(services);
+
 			services.AddControllersWithViews();
+		}
+
+		private void AddServices(IServiceCollection services)
+		{
+			services.AddSingleton(sp =>
+			{
+				return new DatabaseSettings
+				{
+					ConnectionString = "mongodb://localhost:27017/",
+					DatabaseName = "Flower"
+				};
+			});
+
+			services.AddSingleton<IGroupService, GroupService>();
+		}
+
+		private void AddRepositories(IServiceCollection services)
+		{
+			services.AddSingleton<IGroupRepository, GroupRepository>();
 		}
 
 		private void AuthenticationSetup(IServiceCollection services)

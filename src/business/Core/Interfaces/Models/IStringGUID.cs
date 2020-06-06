@@ -2,6 +2,6 @@
 {
 	public interface IStringGUID
 	{
-		public string ID { get; set; }
+		public string _id { get; set; }
 	}
 }

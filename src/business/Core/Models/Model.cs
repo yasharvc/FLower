@@ -4,6 +4,6 @@ namespace Core.Models
 {
 	public abstract class Model : IStringGUID
 	{
-		public string ID { get; set; }
+		public string _id { get; set; }
 	}
 }
