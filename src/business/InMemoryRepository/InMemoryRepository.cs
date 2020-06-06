@@ -48,7 +48,7 @@ namespace InMemoryRepository
 			Dictionary<string, bool> sort,
 			List<Comparison> conditions, int page, int sizeInPage)
 		{
-			var list = repository.Where(x => GetWhere(x,conditions));
+			var list = repository.Where(x => GetWhere(x,conditions)).AsQueryable();
 			return await Task.Run(() => new GenericQueryResult<T>
 			{
 				Result = list,
