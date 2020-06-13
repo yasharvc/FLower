@@ -2,7 +2,7 @@
 {
 	public class UserRole:Model
 	{
-		public User User { get; set; }
-		public Role Role { get; set; }
+		public string UserID { get; set; }
+		public string RoleID { get; set; }
 	}
 }

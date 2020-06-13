@@ -18,8 +18,13 @@
 					</q-toolbar-title>
 				</q-toolbar>
 
-				<q-tabs align="center">
-					<q-tab v-for="t in tabs" :label="t.title" @@click="changeTab(t.tabIndex)"></q-tab>
+				<q-tabs inline-label
+        :breakpoint="0"
+        align="justify">
+					<q-tab v-for="(t,index) in tabs" :label="t.title" @@click="changeTab(t.tabIndex)">
+							<q-icon name="close" @@click="closeTab(index)"
+									class="cursor-pointer"></q-icon>
+					</q-tab>
 				</q-tabs>
 			</q-header>
 
@@ -98,77 +103,30 @@
 	</q-inner-loading>
 </div>
 <script>
-	const tabs = [
-	];
-	const menuList = [
-		//{
-		//	icon: 'inbox',
-		//	label: 'Inbox',
-		//	separator: true,
-		//	link: '/pages/index?id=Yashar',
-		//	id: 1
-		//},
-		//{
-		//	icon: 'send',
-		//	label: 'Outbox',
-		//	separator: false,
-		//	link: '/pages/index?id=Samad',
-		//	id: 2
-		//},
-		//{
-		//	icon: 'delete',
-		//	label: 'Trash',
-		//	separator: false,
-		//	link: '/pages/index?id=Sahar',
-		//	id: 3
-		//},
-		//{
-		//	icon: 'error',
-		//	label: 'Spam',
-		//	separator: true,
-		//	link: '/pages/index?id=iii',
-		//	id: 4
-		//},
-		//{
-		//	icon: 'settings',
-		//	label: 'Settings',
-		//	separator: false,
-		//	link: '/pages/index?id=tyr',
-		//	id: 5
-		//},
-		//{
-		//	icon: 'feedback',
-		//	label: 'Send Feedback',
-		//	separator: false,
-		//	link: '/pages/index?id=oio',
-		//	id: 6
-		//},
-		//{
-		//	icon: 'help',
-		//	iconColor: 'primary',
-		//	label: 'Help',
-		//	separator: false,
-		//	link: '/pages/index?id=trrtg',
-		//	id: 7
-		//}
-	]
+	function uuidv4() {
+		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+			var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+			return v.toString(16);
+		});
+	}
+	const tabs = [];
 	var topmenu = new Vue({
 		el: '#topmenu',
 		data: function () {
 			return {
 				left: false,
-				menuList,
+				menuList:[],
 				tab: 0,
 				tabs,
 				simpleSuccessDialog: {
 					show: false,
-					title: 'test',
-					msg: "Test"
+					title: "",
+					msg: ""
 				},
 				simpleDangerDialog: {
 					show: false,
-					title: 'test',
-					msg: "Test"
+					title: "",
+					msg: ""
 				},
 				loadingDiv: {
 					show: false,
@@ -181,7 +139,6 @@
 			this.$q.addressbarColor.set('#a2e3fa');
 			axios.get("/Pages/Menu")
 				.then(function (response) {
-					debugger;
 					topmenu.menuList = response.data;
 					topmenu.hideLoading();
 				});
@@ -192,19 +149,38 @@
 				console.log(index);
 			},
 			isTab: function (index) {
-				debugger;
 				return this.tab == index;
 			},
+			addTabVariables: function (tabUID, variables) {
+				var tab = this.tabs.find(function (tab) { return tab.id == tabUID; });
+				if (tab)
+					tab.vars = variables;
+			}
+			,
 			menuClick: function (id) {
+				id = parseInt(id);
+				var x = this.tabs.find(function (tab) { return tab.tabIndex == id; });
+				if (x) {
+					//Switch to that tab
+					this.showSimpleDanger("Tab manager", "Tab is open");
+					return;
+				}
+				var uid = uuidv4();
 				this.tabs.push({
-					tabIndex: parseInt(id),
-					title: menuList[id - 1].label
+					tabIndex: id,
+					title: topmenu.menuList[id - 1].label,
+					id: uid
 				});
 				var pages = document.getElementById('pages');
-				readHTML(menuList[id - 1].link + '&index=' + id, function (d, content) {
+				readHTML(topmenu.menuList[id - 1].link + '?index=' + uid, function (d, content) {
 					var scripts = getScripts(content);
-					pages.appendChild(makePage(content));
-					scripts.forEach(m => eval(m));
+					pages.appendChild(makePage(content, uid));
+					var allscripts = "";
+					scripts.forEach(m => {
+						allscripts += "\r\n//----------------\r\n" + m;
+						eval(m);
+					});
+					console.log(allscripts);
 				});
 			},
 			showSimpleSuccess: function (title, msg) {
@@ -225,6 +201,15 @@
 				this.loadingDiv.show = false;
 				this.loadingDiv.msg = '';
 			},
+			closeTab: function (index) {
+				if (index < 0 || index > this.tabs.length)
+					return;
+				var tab = this.tabs[index];
+				tab.vars.forEach(function (d) { d = null; });
+				var doc = document.getElementById(tab.id);
+				doc.remove();
+				this.tabs.splice(index, 1);
+			}
 		}
 	});
 	function getScripts(tes) {
@@ -244,8 +229,9 @@
 		}
 	}
 
-	function makePage(innerHTML) {
+	function makePage(innerHTML,id) {
 		var el = document.createElement('gcse:search');
+		el.id = id;
 		el.setAttribute("v-pre", "");
 		el.innerHTML = innerHTML;
 		return el;

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -7,15 +8,16 @@ using System.Security.Claims;
 
 namespace WebApplication.Controllers
 {
+	[AllowAnonymous]
 	public class SecurityController : BaseController
 	{
 		public SecurityController(IServiceProvider serviceProvider) : base(serviceProvider)
 		{
 		}
 
-		public IActionResult Login()
+		public IActionResult Login(string index)
 		{
-			return View();
+			return View("login", index);
 		}
 
 		public void Authenticate(List<Claim> claims)

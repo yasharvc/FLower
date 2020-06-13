@@ -44,7 +44,6 @@ namespace WebApplication
 
 			services.AddControllersWithViews();
 		}
-
 		private void AddServices(IServiceCollection services)
 		{
 			services.AddSingleton(sp =>
@@ -57,11 +56,18 @@ namespace WebApplication
 			});
 
 			services.AddSingleton<IGroupService, GroupService>();
+			services.AddSingleton<IUserService, UserService>();
+			services.AddSingleton<IRoleService, RoleService>();
+			services.AddSingleton<IUserRoleService, UserRoleService>();
+			services.AddSingleton<IInitialDataService, InitialDataService>();
 		}
 
 		private void AddRepositories(IServiceCollection services)
 		{
 			services.AddSingleton<IGroupRepository, GroupRepository>();
+			services.AddSingleton<IRoleRepository, RoleRepository>();
+			services.AddSingleton<IUserRepository, UserRepository>();
+			services.AddSingleton<IUserRoleRepository, UserRoleRepository>();
 		}
 
 		private void AuthenticationSetup(IServiceCollection services)
@@ -112,12 +118,13 @@ namespace WebApplication
 			{
 				app.UseExceptionHandler("/Home/Error");
 			}
+
+			var sp = app.ApplicationServices;
+			(sp.GetService(typeof(IInitialDataService)) as IInitialDataService).Init();
+
 			app.UseStaticFiles();
-
 			app.UseRouting();
-
 			app.UseAuthentication();
-
 			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints =>

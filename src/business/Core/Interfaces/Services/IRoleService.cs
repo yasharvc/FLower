@@ -8,5 +8,6 @@ namespace Core.Interfaces.Services
 	{
 		Task<List<Role>> GetRolesByIDs(IEnumerable<string> ids);
 		Task<Role> GetRoleByID(string roleID);
+		Task<Role> GetRoleByBName(string roleName);
 	}
 }

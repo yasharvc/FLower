@@ -1,5 +1,7 @@
 ﻿using Core.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Core.Interfaces.Repositories
@@ -13,5 +15,7 @@ namespace Core.Interfaces.Repositories
 			int page,
 			int sizeInPage);
 		Task<T> GetByID(string id);
+		Task<IQueryable<T>> Where(Func<T, bool> predicate);
+		Task<bool> Any(Func<T, bool> predicate);
 	}
 }

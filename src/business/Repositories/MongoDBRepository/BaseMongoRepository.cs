@@ -224,5 +224,17 @@ namespace MongoDBRepository
 
 		public async Task<T> GetByID(string id) => await Database.GetCollection<T>(CollectionName)
 			.Find(m => m._id == id).SingleAsync();
+
+		public async Task<IQueryable<T>> Where(Func<T, bool> predicate)
+		{
+			var lst = await Database.GetCollection<T>(CollectionName).Find(new BsonDocument()).ToListAsync();
+			return lst.Where(predicate).AsQueryable();
+		}
+
+		public async Task<bool> Any(Func<T, bool> predicate)
+		{
+			var lst = await Database.GetCollection<T>(CollectionName).Find(new BsonDocument()).ToListAsync();
+			return lst.Any(predicate);
+		}
 	}
 }

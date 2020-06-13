@@ -6,7 +6,6 @@ using Core.Models.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Core.Services
@@ -16,7 +15,9 @@ namespace Core.Services
 		IRoleService RoleService { get; set; }
 		IGroupService GroupService { get; set; }
 
-		public UserService(IUserRepository repository, IRoleService roleService, IGroupService groupService) : base(repository)
+		public UserService(IUserRepository repository, 
+			IRoleService roleService,
+			IGroupService groupService) : base(repository)
 		{ 
 			RoleService = roleService;
 			GroupService = groupService;
@@ -38,43 +39,8 @@ namespace Core.Services
 			}
 		}
 
-		public async Task GrantRoleToUser(string userID, string roleID)
-		{
-			var user = new User();
-			var role = new Role();
-			try
-			{
-				user = await Repository.GetByID(userID);
-			}
-			catch
-			{
-				throw new UserNotFoundException(userID);
-			}
-			try
-			{
-				role = await RoleService.GetRoleByID(roleID);
-			}
-			catch
-			{
-				throw new RoleNotFoundException(roleID);
-			}
-			throw new NotImplementedException();
-		}
-
-		public async Task<bool> HasUserRole(string userID, string roleID)
-		{
-			throw new NotImplementedException();
-		}
-
-		public async Task<bool> IsUserNamePasswordValid(string username, string password)
-		{
-			throw new NotImplementedException();
-		}
-
-		public async Task RevokeRoleFromUser(string userID, string roleID)
-		{
-			throw new NotImplementedException();
-		}
+		public async Task<bool> IsUserNamePasswordValid(string username, string password) => await Repository.Any(m => m.Username == username && m.Password == password);
+		
 
 		public async Task AddUserToGroup(string userID, string groupID)
 		{

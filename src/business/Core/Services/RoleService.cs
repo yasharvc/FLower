@@ -2,6 +2,7 @@
 using Core.Interfaces.Services;
 using Core.Models.Security;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Core.Services
@@ -9,6 +10,12 @@ namespace Core.Services
 	public class RoleService : BaseCRUDService<Role>, IRoleService
 	{
 		public RoleService(IRoleRepository repository) : base(repository) { }
+
+		public async Task<Role> GetRoleByBName(string roleName)
+		{
+			var lst = await Repository.Where(m => m.Name.Equals(roleName));
+			return lst.First();
+		}
 
 		public async Task<Role> GetRoleByID(string roleID) => await Repository.GetByID(roleID);
 

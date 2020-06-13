@@ -148,5 +148,12 @@ namespace InMemoryRepository
 		}
 
 		public async Task<T> GetByID(string id) => await Task.Run(() => repository.Single(m => m._id == id));
+
+		public async Task<IQueryable<T>> Where(Func<T, bool> predicate) => await
+			Task.Run(() =>
+			repository.Where(predicate).AsQueryable());
+
+		public async Task<bool> Any(Func<T, bool> predicate) => await
+			Task.Run(() => repository.Any(predicate));
 	}
 }
