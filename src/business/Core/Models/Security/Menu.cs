@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace WebApplication.Models
+﻿namespace Core.Models.Security
 {
-	public class MenuItem
+	public class Menu : Model
 	{
-		public string id { get; set; }
 		public string Icon { get; set; }
 		public string IconColor { get; set; }
 		public string Label { get; set; }

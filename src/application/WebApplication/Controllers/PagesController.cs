@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Core.Models.Security;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -27,13 +28,13 @@ namespace WebApplication.Controllers
 		[AllowAnonymous]
 		public JsonResult Menu()
 		{
-			var menus = new List<MenuItem>();
+			var menus = new List<Menu>();
 			if (!IsUserAuthenticated)
 			{
-				menus.Add(new MenuItem {
+				menus.Add(new Menu {
 					Icon = "login",
 					IconColor="Primary",
-					id="1",
+					_id="1",
 					Link=$"/Security/{nameof(SecurityController.Login)}",
 					Separator=true,
 					Label="Log in"
@@ -41,11 +42,11 @@ namespace WebApplication.Controllers
 			}
 			else
 			{
-				menus.Add(new MenuItem
+				menus.Add(new Menu
 				{
 					Icon = "logout",
 					IconColor = "Primary",
-					id = "1",
+					_id = "1",
 					Link = $"/Security/{nameof(SecurityController.Logout)}",
 					Separator = true,
 					Label = "Log out"

@@ -70,6 +70,8 @@ namespace WebApplication
 			services.AddSingleton<IRoleRepository, RoleRepository>();
 			services.AddSingleton<IUserRepository, UserRepository>();
 			services.AddSingleton<IUserRoleRepository, UserRoleRepository>();
+			services.AddSingleton<IMenuRepository, MenuRepository>();
+			services.AddSingleton<IRoleMenuRepository, RoleMenuRepository>();
 		}
 
 		private void AuthenticationSetup(IServiceCollection services)

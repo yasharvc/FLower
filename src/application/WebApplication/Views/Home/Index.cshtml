@@ -139,6 +139,9 @@
 			this.$q.addressbarColor.set('#a2e3fa');
 			axios.get("/Pages/Menu")
 				.then(function (response) {
+					response.data.forEach(function (menu) {
+						menu.id = menu._id;
+					})
 					topmenu.menuList = response.data;
 					topmenu.hideLoading();
 				});
