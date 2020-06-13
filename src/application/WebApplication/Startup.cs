@@ -62,6 +62,8 @@ namespace WebApplication
 			services.AddSingleton<IRoleService, RoleService>();
 			services.AddSingleton<IUserRoleService, UserRoleService>();
 			services.AddSingleton<IInitialDataService, InitialDataService>();
+			services.AddSingleton<IRoleMenuService, RoleMenuService>();
+			services.AddSingleton<IMenuService, MenuService>();
 		}
 
 		private void AddRepositories(IServiceCollection services)
@@ -137,6 +139,9 @@ namespace WebApplication
 
 			app.UseEndpoints(endpoints =>
 			{
+				endpoints.MapControllerRoute(
+					name: "Areas",
+					pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 				endpoints.MapControllerRoute(
 					name: "default",
 					pattern: "{controller=Home}/{action=Index}/{id?}");

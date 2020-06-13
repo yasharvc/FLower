@@ -2,6 +2,7 @@
 using Core.Interfaces.Services;
 using Core.Models;
 using Core.Models.Security;
+using System;
 using System.Threading.Tasks;
 
 namespace Core.Services
@@ -12,18 +13,24 @@ namespace Core.Services
 		IGroupService GroupService { get; set; }
 		IUserService UserService { get; set; }
 		IUserRoleService UserRoleService { get; set; }
+		IMenuService MenuService { get; }
+		IRoleMenuService RoleMenuService { get; }
 
 		public InitialDataService(
 			IRoleService roleService
 			, IGroupService groupService
 			, IUserService userService
 			, IUserRoleService userRoleService
+			, IMenuService menuService
+			, IRoleMenuService roleMenuService
 			)
 		{
 			RoleService = roleService;
 			GroupService = groupService;
 			UserService = userService;
 			UserRoleService = userRoleService;
+			MenuService = menuService;
+			RoleMenuService = roleMenuService;
 		}
 
 
@@ -34,7 +41,36 @@ namespace Core.Services
 				await CreateRoles();
 				await CreateGroups();
 				await CreateUser();
+				await CreateMenu();
 			}
+		}
+
+		private async Task CreateMenu()
+		{
+			var createUserMenu = new Menu
+			{
+				Icon = "user",
+				IconColor = "blue",//orange,purple,teal,black
+				Label = "Create user",
+				Link = "/User/Create",
+				Separator = true
+			};
+			var createGroupMenu = new Menu
+			{
+				Icon = "group",
+				IconColor = "blue",//orange,purple,teal,black
+				Label = "Create group",
+				Link = "/Group/Create",
+				Separator = true
+			};
+
+			await MenuService.Create(createUserMenu);
+			var role = await RoleService.GetRoleByBName(Roles.SuperAdmin);
+			await RoleMenuService.Create(new RoleMenu
+			{
+				RoleID = role._id,
+				MenuID = createUserMenu._id
+			});
 		}
 
 		private async Task<bool> IsDataExists() => await UserService.IsUserNamePasswordValid("Yashar", "123");
