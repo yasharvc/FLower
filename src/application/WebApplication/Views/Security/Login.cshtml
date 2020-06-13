@@ -62,6 +62,8 @@
 		},
 		methods: {
 			login: function () {
+				debugger;
+				this.resetErrors();
 				topmenu.showLoading();
 				this.$refs.username.validate()
 				this.$refs.password.validate()
@@ -71,36 +73,33 @@
 					topmenu.hideLoading();
 				}
 				else {
+					debugger;
 					send = {
 						username: loginApp.username,
-						password: loginApp.password,
-						__RequestVerificationToken: '@token'
+						password: loginApp.password
 					};
-					$.ajax({
-						type: "POST",
-						url: '/Security/Login',
-						data: send,
-						success: function (resp) {
-							if (resp.result) {
-								topmenu.showSuccessToast(SUCCESSFULLY_LOGEDIN);
-								window.location = "/";
-							}
-							else {
-								topmenu.showErrorToast(LOGIN_FAILED);
-								loginApp.error = LOGIN_FAILED;
-								loginApp.isValid = false;
-								topmenu.hideLoading();
-							}
+					postByToken('/Security/Login', '@token', send, function (resp) {
+						if (resp.result) {
+							topmenu.showSuccessToast(SUCCESSFULLY_LOGEDIN);
+							window.location = "/";
+						}
+						else {
+							topmenu.showErrorToast(LOGIN_FAILED);
+							loginApp.error = LOGIN_FAILED;
+							loginApp.isValid = false;
+							topmenu.hideLoading();
+							setTimeout(function () {
+								loginApp.resetErrors();
+							}, 2000);
 						}
 					});
 				}
 			},
-			onReset: function () {
-				this.username = null
-				this.password = null
-
-				this.$refs.username.resetValidation()
-				this.$refs.password.resetValidation()
+			resetErrors: function () {
+				loginApp.error = "";
+				loginApp.isValid = true;
+				this.$refs.username.resetValidation();
+				this.$refs.password.resetValidation();
 			}
 		}
 	});

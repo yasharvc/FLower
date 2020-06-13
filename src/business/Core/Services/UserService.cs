@@ -26,20 +26,18 @@ namespace Core.Services
 
 		public async Task<User> GetUser(string userID) => await Repository.GetByID(userID);
 
-		public async Task<List<Role>> GetUserRoles(string userID)
+		public async Task<bool> IsUserNamePasswordValid(string username, string password)
 		{
 			try
 			{
-				var user = await Repository.GetByID(userID);
-				return await RoleService.GetRolesByIDs(user.Groups);
+				await GetUser(username, password);
+				return true;
 			}
-			catch
+			catch (UserNotFoundException)
 			{
-				throw new UserNotFoundException(userID);
+				return false;
 			}
 		}
-
-		public async Task<bool> IsUserNamePasswordValid(string username, string password) => await Repository.Any(m => m.Username == username && m.Password == password);
 		
 
 		public async Task AddUserToGroup(string userID, string groupID)
@@ -92,6 +90,14 @@ namespace Core.Services
 			}
 			((List<string>)user.Groups).AddRange(groupsIDs);
 			await Repository.Update(user);
+		}
+
+		public async Task<User> GetUser(string username, string password)
+		{
+			var res = (await Repository.Where(m => m.Username == username && m.Password == password)).FirstOrDefault();
+			if (res == null)
+				throw new UserNotFoundException();
+			return res;
 		}
 	}
 }

@@ -22,6 +22,8 @@ namespace Core.Services
 		public async Task<List<Role>> GetRolesByIDs(IEnumerable<string> ids)
 		{
 			var res = new List<Role>();
+			if (ids == null)
+				return res;
 			foreach (var item in ids)
 			{
 				res.Add(await GetRoleByID(item));

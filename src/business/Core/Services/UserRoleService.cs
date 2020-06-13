@@ -22,15 +22,7 @@ namespace Core.Services
 
 		public async Task<IEnumerable<Role>> GetUserRoles(string userID)
 		{
-			User user = new User();
-			try
-			{
-				user = await UserService.GetUser(userID);
-			}
-			catch (UserNotFoundException)
-			{
-				throw;
-			}
+			var user = await UserService.GetUser(userID);
 			var roleIDs = await Repository.Where(m => m.UserID == userID);
 			return await RoleService.GetRolesByIDs(roleIDs.Select(m => m.RoleID));
 		}

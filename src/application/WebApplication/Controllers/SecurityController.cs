@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Core.Exceptions.Application;
+using Core.Interfaces.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -25,11 +28,21 @@ namespace WebApplication.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Login(string username,string password)
 		{
-			await Authenticate(new List<Claim>
+			var userService = GetService<IUserService>();
+			var userRolesService = GetService<IUserRoleService>();
+			if (await userService.IsUserNamePasswordValid(username, password))
 			{
-				new Claim(ClaimTypes.Role,"ADMIN")
-			});
-			return Json(new { result = true });
+				var user = await userService.GetUser(username, password);
+				var roles = await userRolesService.GetUserRoles(user._id);
+				var claims = new List<Claim>();
+				roles.ToList().ForEach(m => claims.Add(new Claim(ClaimTypes.Role, m.Name)));
+				await Authenticate(claims);
+				return Json(new { result = true });
+			}
+			else
+			{
+				return Json(new { result = false });
+			}
 		}
 
 		public async Task<IActionResult> Logout()
