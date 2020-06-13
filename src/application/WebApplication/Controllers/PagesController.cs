@@ -41,7 +41,15 @@ namespace WebApplication.Controllers
 			}
 			else
 			{
-				
+				menus.Add(new MenuItem
+				{
+					Icon = "logout",
+					IconColor = "Primary",
+					id = "1",
+					Link = $"/Security/{nameof(SecurityController.Logout)}",
+					Separator = true,
+					Label = "Log out"
+				});
 			}
 			return Json(menus);
 		}

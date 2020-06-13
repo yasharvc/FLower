@@ -62,25 +62,35 @@
 		},
 		methods: {
 			login: function () {
+				topmenu.showLoading();
 				this.$refs.username.validate()
 				this.$refs.password.validate()
 
 				if (this.$refs.username.hasError || this.$refs.password.hasError) {
 					this.formHasError = true;
+					topmenu.hideLoading();
 				}
 				else {
-					debugger;
+					send = {
+						username: loginApp.username,
+						password: loginApp.password,
+						__RequestVerificationToken: '@token'
+					};
 					$.ajax({
 						type: "POST",
-						url: '/Security/Login?username=a&password=b',
-						data: {
-							username: loginApp.username,
-							password: loginApp.password,
-							__RequestVerificationToken:'@token'
-						},
+						url: '/Security/Login',
+						data: send,
 						success: function (resp) {
-							debugger;
-							topmenu.showSuccessToast(JSON.stringify(resp));
+							if (resp.result) {
+								topmenu.showSuccessToast(SUCCESSFULLY_LOGEDIN);
+								window.location = "/";
+							}
+							else {
+								topmenu.showErrorToast(LOGIN_FAILED);
+								loginApp.error = LOGIN_FAILED;
+								loginApp.isValid = false;
+								topmenu.hideLoading();
+							}
 						}
 					});
 				}

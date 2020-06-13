@@ -172,6 +172,7 @@
 					id: uid
 				});
 				var pages = document.getElementById('pages');
+				topmenu.showLoading();
 				readHTML(topmenu.menuList[id - 1].link + '?index=' + uid, function (d, content) {
 					var scripts = getScripts(content);
 					pages.appendChild(makePage(content, uid));
@@ -180,7 +181,7 @@
 						allscripts += "\r\n//----------------\r\n" + m;
 						eval(m);
 					});
-					console.log(allscripts);
+					topmenu.hideLoading();
 				});
 			},
 			showSimpleSuccess: function (title, msg) {

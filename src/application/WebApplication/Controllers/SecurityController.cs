@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace WebApplication.Controllers
 {
@@ -22,23 +23,23 @@ namespace WebApplication.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult Login(string username,string password)
+		public async Task<IActionResult> Login(string username,string password)
 		{
-			//Authenticate(new List<Claim>
-			//{
-			//	new Claim(ClaimTypes.Role,"ADMIN")
-			//});
+			await Authenticate(new List<Claim>
+			{
+				new Claim(ClaimTypes.Role,"ADMIN")
+			});
 			return Json(new { result = true });
 		}
 
-		private void Authenticate(IEnumerable<Claim> claims)
+		public async Task<IActionResult> Logout()
 		{
-			//var claims = new List<Claim>
-			//{
-			//	new Claim(ClaimTypes.Name, ""),
-			//	new Claim("FullName", ""),
-			//	new Claim(ClaimTypes.Role, "Administrator")
-			//};
+			await HttpContext.SignOutAsync();
+			return Content("<script>window.location='/';</script>");
+		}
+
+		protected async Task Authenticate(IEnumerable<Claim> claims)
+		{
 			var claimsIdentity = new ClaimsIdentity(
 				claims, CookieAuthenticationDefaults.AuthenticationScheme);
 			var authProperties = new AuthenticationProperties
@@ -48,7 +49,7 @@ namespace WebApplication.Controllers
 				IsPersistent = false,
 				IssuedUtc = DateTimeOffset.UtcNow,
 			};
-			HttpContext.SignInAsync(new ClaimsPrincipal(claimsIdentity), authProperties);
+			await HttpContext.SignInAsync(new ClaimsPrincipal(claimsIdentity), authProperties);
 		}
 	}
 }
