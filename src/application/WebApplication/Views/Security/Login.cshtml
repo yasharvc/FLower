@@ -1,46 +1,97 @@
 ﻿@{
 	Layout = null;
 }
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery antiforgery
+@{
+	var token = antiforgery.GetAndStoreTokens(Context).RequestToken;
+}
 <div id="login-app@(Model)">
-	<div class="q-pa-md q-gutter-sm">
+	<form v-on:submit.prevent="login"
+		  v-on:reset.prevent="onReset"
+		  class="q-pa-md q-gutter-sm">
 
-		<q-card class="my-card">
+		<q-card @@submit.prevent.stop="login" class="my-card">
 			<q-card-section>
 				<div class="text-h6">Login information</div>
 				<div class="text-subtitle2">by Flower Inc</div>
 			</q-card-section>
 
 			<q-card-section class="q-pt-none">
-				<q-input v-model="username" outlined label="User name:" hint=""></q-input>
-				<q-input v-model="password" 
+				<q-input v-model="username"
+						 ref="username"
+						 outlined
+						 label="User name:"
+						 :rules="[ isStringEmpty ]"
+						 :error-message="error"
+						 :error="!isValid"
+						 hint=""></q-input>
+				<q-input v-model="password"
+						 ref="password"
 						 outlined label="Password:"
-						 :type="isPwd ? 'password' : 'text'" 
+						 :type="isPwd ? 'password' : 'text'"
+						 :rules="[ isStringEmpty ]"
 						 hint="">
 					<template v-slot:append>
 						<q-icon :name="isPwd ? 'visibility_off' : 'visibility'"
 								class="cursor-pointer"
-								@@click="isPwd = !isPwd" ></q-icon>
+								@@click="isPwd = !isPwd"></q-icon>
 					</template>
 				</q-input>
 			</q-card-section>
 			<q-card-section class="q-pt-none">
-				<q-btn push color="primary" label="Login">
+				<q-btn push type="submit" color="primary" label="Login">
 					<q-icon name="lock_open" />
 				</q-btn>
 			</q-card-section>
 		</q-card>
 
-	</div>
+	</form>
 </div>
 <script>
 	var loginApp = new Vue({
 		el: "#login-app@(Model)",
 		data: function () {
 			return {
-				password: '',
+				password: "",
 				isPwd: true,
-				username: '',
+				username: "",
+				formHasError: false,
+				isValid: true,
+				error:""
 			};
+		},
+		methods: {
+			login: function () {
+				this.$refs.username.validate()
+				this.$refs.password.validate()
+
+				if (this.$refs.username.hasError || this.$refs.password.hasError) {
+					this.formHasError = true;
+				}
+				else {
+					debugger;
+					$.ajax({
+						type: "POST",
+						url: '/Security/Login?username=a&password=b',
+						data: {
+							username: loginApp.username,
+							password: loginApp.password,
+							__RequestVerificationToken:'@token'
+						},
+						success: function (resp) {
+							debugger;
+							topmenu.showSuccessToast(JSON.stringify(resp));
+						}
+					});
+				}
+			},
+			onReset: function () {
+				this.username = null
+				this.password = null
+
+				this.$refs.username.resetValidation()
+				this.$refs.password.resetValidation()
+			}
 		}
 	});
 	topmenu.addTabVariables('@Model', [loginApp]);

@@ -16,7 +16,8 @@ namespace WebApplication.Controllers
 		public IActionResult Index(string id,int index)
 		{
 			ViewBag.index = index;
-			return View("Index", id);
+			//return View("Index", id);
+			return Content("Congroooo");
 		}
 
 		public IActionResult Unauth() => Unauthorized("Not allowed");

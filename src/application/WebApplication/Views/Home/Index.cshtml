@@ -197,6 +197,19 @@
 				this.loadingDiv.show = true;
 				this.loadingDiv.msg = msg || 'Please wait...';
 			},
+			showErrorToast: function (msg) {
+				this.$q.notify({
+					color: 'negative',
+					message: msg
+				})
+			},
+			showSuccessToast: function (msg) {
+				this.$q.notify({
+					icon:'done',
+					color: 'positive',
+					message: msg
+				})
+			},
 			hideLoading: function () {
 				this.loadingDiv.show = false;
 				this.loadingDiv.msg = '';

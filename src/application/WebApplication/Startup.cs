@@ -36,7 +36,9 @@ namespace WebApplication
 				.RequireAuthenticatedUser()
 				.Build();
 				options.Filters.Add(new AuthorizeFilter(policy));
-			});
+			}).AddRazorRuntimeCompilation();
+			services.AddAntiforgery(o => o.HeaderName = "CSRF-TOKEN");
+			services.AddCors();
 			AuthenticationSetup(services);
 
 			AddRepositories(services);
@@ -126,6 +128,10 @@ namespace WebApplication
 			app.UseRouting();
 			app.UseAuthentication();
 			app.UseAuthorization();
+			app.UseCors(option => option
+			   .AllowAnyOrigin()
+			   .AllowAnyMethod()
+			   .AllowAnyHeader());
 
 			app.UseEndpoints(endpoints =>
 			{

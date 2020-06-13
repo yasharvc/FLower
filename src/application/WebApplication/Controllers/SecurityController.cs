@@ -15,12 +15,23 @@ namespace WebApplication.Controllers
 		{
 		}
 
+		[HttpGet]
 		public IActionResult Login(string index)
 		{
 			return View("login", index);
 		}
 
-		public void Authenticate(List<Claim> claims)
+		[HttpPost]
+		public IActionResult Login(string username,string password)
+		{
+			//Authenticate(new List<Claim>
+			//{
+			//	new Claim(ClaimTypes.Role,"ADMIN")
+			//});
+			return Json(new { result = true });
+		}
+
+		private void Authenticate(IEnumerable<Claim> claims)
 		{
 			//var claims = new List<Claim>
 			//{
@@ -37,7 +48,7 @@ namespace WebApplication.Controllers
 				IsPersistent = false,
 				IssuedUtc = DateTimeOffset.UtcNow,
 			};
-
+			HttpContext.SignInAsync(new ClaimsPrincipal(claimsIdentity), authProperties);
 		}
 	}
 }
