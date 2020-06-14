@@ -35,7 +35,7 @@ namespace MongoDBRepository
 			ConfigureCollection();
 		}
 
-		public async Task Create(T entry)
+		public virtual async Task Create(T entry)
 		{
 			GetNewGUID(entry);
 			await Repository.InsertOneAsync(entry);

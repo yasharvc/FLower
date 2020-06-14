@@ -1,6 +1,9 @@
 ﻿using Core.Interfaces.Repositories;
 using Core.Models.Security;
 using Core.Models.SystemModels;
+using MongoDB.Driver;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MongoDBRepository
 {
@@ -11,5 +14,7 @@ namespace MongoDBRepository
 		}
 
 		protected override string CollectionName => "RoleMenus";
+
+		public async Task<IEnumerable<RoleMenu>> GetByRoleID(string id) => await Repository.Find(m => m.RoleID == id).ToListAsync();
 	}
 }

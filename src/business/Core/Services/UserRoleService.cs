@@ -20,11 +20,14 @@ namespace Core.Services
 			UserService = userService;
 		}
 
-		public async Task<IEnumerable<Role>> GetUserRoles(string userID)
+		public async IAsyncEnumerable<Role> GetUserRoles(string userID)
 		{
 			var user = await UserService.GetUser(userID);
 			var roleIDs = await Repository.Where(m => m.UserID == userID);
-			return await RoleService.GetRolesByIDs(roleIDs.Select(m => m.RoleID));
+			foreach (var item in await RoleService.GetRolesByIDs(roleIDs.Select(m => m.RoleID)))
+			{
+				yield return item;
+			}
 		}
 
 		public async Task GrantRoleToUser(string userID, string roleID)

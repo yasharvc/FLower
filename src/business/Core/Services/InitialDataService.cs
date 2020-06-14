@@ -52,7 +52,7 @@ namespace Core.Services
 				Icon = "user",
 				IconColor = "blue",//orange,purple,teal,black
 				Label = "Create user",
-				Link = "/User/Create",
+				Link = "/SuperAdmin/User/Create",
 				Separator = true
 			};
 			var createGroupMenu = new Menu
@@ -60,16 +60,22 @@ namespace Core.Services
 				Icon = "group",
 				IconColor = "blue",//orange,purple,teal,black
 				Label = "Create group",
-				Link = "/Group/Create",
+				Link = "/SuperAdmin/Group/Create",
 				Separator = true
 			};
 
 			await MenuService.Create(createUserMenu);
+			await MenuService.Create(createGroupMenu);
 			var role = await RoleService.GetRoleByBName(Roles.SuperAdmin);
 			await RoleMenuService.Create(new RoleMenu
 			{
 				RoleID = role._id,
 				MenuID = createUserMenu._id
+			});
+			await RoleMenuService.Create(new RoleMenu
+			{
+				RoleID = role._id,
+				MenuID = createGroupMenu._id
 			});
 		}
 

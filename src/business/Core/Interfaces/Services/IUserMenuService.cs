@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 
 namespace Core.Interfaces.Services
 {
-	public interface IMenuService : ICRUDService<Menu>
+	public interface IUserMenuService
 	{
-		Task<IEnumerable<Menu>> GetMenusByIDs(IEnumerable<string> ids);
+		IAsyncEnumerable<Menu> GetUserMenu(string userID);
 	}
 }

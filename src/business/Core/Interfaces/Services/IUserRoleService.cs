@@ -6,7 +6,7 @@ namespace Core.Interfaces.Services
 {
 	public interface IUserRoleService : ICRUDService<UserRole>
 	{
-		Task<IEnumerable<Role>> GetUserRoles(string userID);
+		IAsyncEnumerable<Role> GetUserRoles(string userID);
 		Task<bool> HasUserThisRole(string userID, string roleID);
 		Task<bool> HasUserOnOfTheseRoles(string userID, IEnumerable<string> roleIDs);
 		Task GrantRoleToUser(string userID, string roleID);

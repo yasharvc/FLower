@@ -5,17 +5,14 @@
 @{
 	var token = antiforgery.GetAndStoreTokens(Context).RequestToken;
 }
-<div id="login-app@(Model)">
-	<form v-on:submit.prevent="login"
+<div id="user-create@(Model)">
+	<form v-on:submit.prevent="save"
 		  v-on:reset.prevent="onReset"
 		  class="q-pa-md q-gutter-sm">
-
 		<q-card class="my-card">
 			<q-card-section>
-				<div class="text-h6">Login information</div>
-				<div class="text-subtitle2">by Flower Inc</div>
+				<div class="text-h6">New user information</div>
 			</q-card-section>
-
 			<q-card-section class="q-pt-none">
 				<q-input v-model="username"
 						 ref="username"
@@ -39,30 +36,28 @@
 				</q-input>
 			</q-card-section>
 			<q-card-section class="q-pt-none">
-				<q-btn push type="submit" color="primary" label="Login">
-					<q-icon name="lock_open" />
+				<q-btn push type="submit" color="primary" label="Save">
+					<q-icon name="save" />
 				</q-btn>
 			</q-card-section>
 		</q-card>
-
 	</form>
 </div>
 <script>
-	var loginApp = new Vue({
-		el: "#login-app@(Model)",
+	var createUserApp = new Vue({
+		el: "#user-create@(Model)",
 		data: function () {
 			return {
 				password: "",
-				isPwd: true,
 				username: "",
+				isPwd: true,
 				formHasError: false,
 				isValid: true,
 				error:""
 			};
 		},
 		methods: {
-			login: function () {
-				debugger;
+			save: function () {
 				this.resetErrors();
 				topmenu.showLoading();
 				this.$refs.username.validate()
@@ -73,35 +68,42 @@
 					topmenu.hideLoading();
 				}
 				else {
-					debugger;
 					send = {
-						username: loginApp.username,
-						password: loginApp.password
+						username: createUserApp.username,
+						password: createUserApp.password
 					};
-					postByToken('/Security/Login', '@token', send, function (resp) {
+					postByToken('/SuperAdmin/User/Create', '@token', send, function (resp) {
 						if (resp.result) {
-							topmenu.showSuccessToast(SUCCESSFULLY_LOGEDIN);
-							window.location = "/";
+							topmenu.showSuccessToast(SUCCESSFULLY_CREATED);
+							createUserApp.clearForm();
+							createUserApp.resetErrors();
+							topmenu.hideLoading();
 						}
 						else {
-							topmenu.showErrorToast(LOGIN_FAILED);
-							loginApp.error = LOGIN_FAILED;
-							loginApp.isValid = false;
+							resp.errors.forEach(function (error) {
+								topmenu.showErrorToast(translateErrorCode(error));
+							});
+							createUserApp.error = FAILURE_IN_CREATING;
+							createUserApp.isValid = false;
 							topmenu.hideLoading();
 							setTimeout(function () {
-								loginApp.resetErrors();
+								createUserApp.resetErrors();
 							}, 2000);
 						}
 					});
 				}
 			},
+			clearForm: function () {
+				this.username = '';
+				this.password = '';
+			},
 			resetErrors: function () {
-				loginApp.error = "";
-				loginApp.isValid = true;
+				createUserApp.error = "";
+				createUserApp.isValid = true;
 				this.$refs.username.resetValidation();
 				this.$refs.password.resetValidation();
 			}
 		}
 	});
-	topmenu.addTabVariables('@Model', [loginApp]);
+	topmenu.addTabVariables('@Model', [createUserApp]);
 </script>

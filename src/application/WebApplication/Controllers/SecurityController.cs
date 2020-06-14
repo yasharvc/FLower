@@ -33,9 +33,14 @@ namespace WebApplication.Controllers
 			if (await userService.IsUserNamePasswordValid(username, password))
 			{
 				var user = await userService.GetUser(username, password);
-				var roles = await userRolesService.GetUserRoles(user._id);
-				var claims = new List<Claim>();
-				roles.ToList().ForEach(m => claims.Add(new Claim(ClaimTypes.Role, m.Name)));
+				var claims = new List<Claim>
+				{
+					new Claim(ClaimTypes.GivenName, user._id)
+				};
+				await foreach (var role in userRolesService.GetUserRoles(user._id))
+				{
+					claims.Add(new Claim(ClaimTypes.Role, role.Name));
+				}
 				await Authenticate(claims);
 				return Json(new { result = true });
 			}

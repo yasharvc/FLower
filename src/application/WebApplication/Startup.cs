@@ -64,6 +64,7 @@ namespace WebApplication
 			services.AddSingleton<IInitialDataService, InitialDataService>();
 			services.AddSingleton<IRoleMenuService, RoleMenuService>();
 			services.AddSingleton<IMenuService, MenuService>();
+			services.AddSingleton<IUserMenuService, UserMenuService>();
 		}
 
 		private void AddRepositories(IServiceCollection services)
@@ -87,6 +88,7 @@ namespace WebApplication
 					options.LogoutPath = authenticationSettings.LogoutPath;
 					options.LoginPath = authenticationSettings.LoginPath;
 					options.AccessDeniedPath = authenticationSettings.AccessDeniedPath;
+					options.ExpireTimeSpan = new TimeSpan(0, authenticationSettings.ExpireMinutes, 0);
 				}
 				);
 

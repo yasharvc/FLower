@@ -21,8 +21,8 @@
 				<q-tabs inline-label
         :breakpoint="0"
         align="justify">
-					<q-tab v-for="(t,index) in tabs" :label="t.title" @@click="changeTab(t.tabIndex)">
-							<q-icon name="close" @@click="closeTab(index)"
+					<q-tab v-for="t in tabs" :label="t.title" @@click="changeTab(t.tabIndex)">
+							<q-icon name="close" @@click="closeTab(t.tabIndex)"
 									class="cursor-pointer"></q-icon>
 					</q-tab>
 				</q-tabs>
@@ -149,6 +149,13 @@
 		methods: {
 			changeTab: function (index) {
 				this.tab = parseInt(index);
+				
+				this.tabs.forEach(function (tab) {
+					var obj = document.getElementById(tab.id);
+					obj.style.display = tab.tabIndex == index ?
+						'block'
+						: 'none';
+				});
 				console.log(index);
 			},
 			isTab: function (index) {
@@ -179,6 +186,8 @@
 				readHTML(topmenu.menuList[id - 1].link + '?index=' + uid, function (d, content) {
 					var scripts = getScripts(content);
 					pages.appendChild(makePage(content, uid));
+					var obj = document.getElementById(uid);
+					obj.style.display = 'none';
 					var allscripts = "";
 					scripts.forEach(m => {
 						allscripts += "\r\n//----------------\r\n" + m;
@@ -219,13 +228,21 @@
 				this.loadingDiv.msg = '';
 			},
 			closeTab: function (index) {
-				if (index < 0 || index > this.tabs.length)
-					return;
-				var tab = this.tabs[index];
-				tab.vars.forEach(function (d) { d = null; });
-				var doc = document.getElementById(tab.id);
-				doc.remove();
-				this.tabs.splice(index, 1);
+				var tab = this.tabs.find(function (tab) {
+					return tab.tabIndex == index;
+				});
+				if (tab) {
+					if (tab.vars)
+						tab.vars.forEach(function (d) { d = null; });
+					var doc = document.getElementById(tab.id);
+					doc.remove();
+					for (var i = 0; i < this.tabs.length; i++) {
+						if (this.tabs[i].tabIndex == index) {
+							this.tabs.splice(i, 1);
+							return;
+						}
+					}
+				}
 			}
 		}
 	});
